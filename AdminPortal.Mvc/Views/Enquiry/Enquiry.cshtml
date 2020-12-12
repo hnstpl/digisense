@@ -1,0 +1,402 @@
+﻿@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@model AdminPortal.Mvc.Models.Enquiry.Enquiry
+@{
+    ViewBag.Title = "Enquiry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    List<AdminPortal.Mvc.Models.Enquiry.Enquiry> EnquiryModeldata = ViewBag.Enquirylist == null ? null : ViewBag.Enquirylist;
+    List<AdminPortal.Mvc.Models.Enquiry.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+}
+
+<script src="~/SmartAdmin/js/alert/jquery-confirm.js"></script>
+<link rel="stylesheet" href="~/SmartAdmin/css/alert/jquery-confirm.css">
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-tractor mr-1 fs-sm"></i>Enquiry</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+@using (Html.BeginForm("Enquiry", "Enquiry", FormMethod.Post, new { @id = "form2" }))
+{
+    <input type="hidden" name="hdnsearch" id="hdnsearch" value="0" />
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon  fal fa-tractor"></i>
+                        Enquiry
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2 text-right min-width-0">
+                    <a href="@Url.Action("DownloadEnquiryHistory", "Enquiry")" title="Export Enquiry Data"><img src="~/img/icon_excel.png" /></a>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <div class="controls">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.Validity, new { @class = "form-control", placeholder = "Select data range", id = "Validity" })
+                            <label for="Validity" class="input-group-append">
+                                <span class="input-group-text fs-xl " style="height: 109%;">
+                                    <i class="fal fa-calendar-alt"></i>
+                                </span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmbEnqtype" name="cmbEnqtype" class="custom-select">
+                        <option value="0">Select Enquiry Type</option>
+                        <option value="1">User Enquiry</option>
+                        <option value="2">Referral Enquiry</option>
+                        @*<option value="3">Interested in Exchange</option>*@
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmbprodtype" name="cmbprodtype" class="custom-select">
+                        <option value="0">Select Product Type</option>
+                        <option value="1">Tractors</option>
+                        <option value="2">Implements</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmblang" name="cmblang" class="custom-select">
+                        <option value="00">Select Language</option>
+                        @foreach (AdminPortal.Mvc.Models.Enquiry.Language item in LanguageModeldata)
+                        {
+                            if (item.Languageid == 1)
+                            {
+                                <option value=@item.Languageid selected> @item.Languagename</option>
+                            }
+                            else
+                            {
+                                <option value=@item.Languageid> @item.Languagename</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="EnqSearch" name="EnqSearch">Apply</button>
+                </div>
+
+            </div>
+
+            <div>
+                <div class="col-xl-12 row">
+
+                    <div class="alert alert-info" position:absolute; id="sucessmessage" style="display:none;width:500px;margin:0 auto;">
+                    </div>
+
+                    <div class="alert alert-danger" position:absolute; id="errormessage" style="display:none;width:500px;">
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2> User / Referral</h2>
+                            <div class="panel-toolbar float-right mr-2">
+
+                            </div>
+                            @*<div class="panel-toolbar float-right pr-2">
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                                </div>*@
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-enquiry" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">S.No</td>
+                                                    <td class="fw-500 text-center">Dealer</td>
+                                                    <td class="fw-500 text-center">Branch</td>
+                                                    <td class="fw-500 text-center">Customer</td>
+                                                    <td class="fw-500 text-center">Enquiry Type</td>
+                                                    <td class="fw-500 text-center">Product Type</td>
+                                                    <td class="fw-500 text-center">Model</td>
+                                                    <td class="fw-500 text-center">Enquired By</td>
+                                                    <td class="fw-500 text-center">Enquired Date</td>
+                                                    <td class="fw-500 text-center">MemberShip No</td>
+                                                    <td class="fw-500 text-center">MemberShip Date</td>
+                                                    <td class="fw-500 text-center">Remarks</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int dno = 0;
+                                                }
+                                                @foreach (AdminPortal.Mvc.Models.Enquiry.Enquiry item in EnquiryModeldata)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">  @{ dno++; } @dno</td>
+                                                        <td> @item.DealerName</td>
+                                                        <td> @item.DealerBranchName_VC</td>
+                                                        <td class="text-center" name="Customer"> @item.CustName_VC</td>
+                                                        <td> @item.EnqTypeName</td>
+                                                        @if (item.ProductNImplement == 1)
+                                                        {
+                                                            <td>
+                                                                Tractors
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>Implements</td>
+                                                        }
+                                                        <td> @item.TPDH_MODELNAME_VC</td>
+                                                        <td> @item.CustName_VC</td>
+                                                        <td> @Convert.ToDateTime(item.CREATEDDT_D).ToString("dd-MMM-yyyy")</td>
+                                                        <td> @item.MemberShipNp</td>
+                                                        <td> @Convert.ToDateTime(item.MemberShipDate).ToString("dd-MMM-yyyy")</td>
+                                                        <td> @item.ENQ_REMARKS</td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+
+            var minDate = new Date();
+            minDate.setMonth(minDate.getMonth() - 3);
+            var maxDate = new Date();
+            var validity = '@HttpContextAccessor.HttpContext.Session.GetString("validity")';
+
+
+
+            if (validity != '') {
+
+                var dates = validity.split('-');
+                var fromdate = new Date();
+                fromdate = dates[0];
+                var todate = new Date();
+                todate = dates[1];
+                var start = fromdate;
+                var end = todate;
+            }
+            else {
+                var start = minDate; //moment().subtract(90, 'days');
+                var end = maxDate; // moment();
+
+            }
+
+
+            $("#cmblang").val('@HttpContextAccessor.HttpContext.Session.GetString("Dlangid")');
+            $("#cmbEnqtype").val('@HttpContextAccessor.HttpContext.Session.GetString("Enqtype")');
+            $("#cmbprodtype").val('@HttpContextAccessor.HttpContext.Session.GetString("prodtype")');
+
+
+            $('#Validity, #datepicker-modal-2').daterangepicker(
+                {
+                      startDate: start,
+                      endDate: end,
+                }, function (start, end, label) {
+            });
+
+            $('#dt-enquiry').on('click', '.badge-pill', function () {
+
+                var enquiryid = $(this).closest('tr').find('td[name*=EnquiryID]');
+                var Status =  $(this).closest('tr').find('span[name=status]');
+
+                var act = $(this);
+
+
+                if (enquiryid.text().trim() == '') {
+                    enquiryid = $(this).closest('tr').prev('tr').find('td[name=EnquiryID]');
+                    Status = $(this).closest('tr').prev('tr').find('span[name=status]');
+                }
+
+
+                var formData = new FormData();
+                    formData.append("enquiryid", enquiryid.text().trim());
+
+
+                if (Status.text().trim().toLowerCase() == "open") {
+                        formData.append("active", "Closed");
+                    } else {
+                        formData.append("active", "Open");
+                    }
+
+                    Swal.fire(
+                        {
+                            title: "Do you want to change the status?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes!"
+                        }).then(function (result) {
+                            if (result.value) {
+
+                                  $.ajax({
+                        url: "./Updateenquiry",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+
+                            if (act.text().toLowerCase() == "closed") {
+                                act.removeClass('badge-success');
+                                act.addClass('badge-danger');
+                                act.text('Open');
+                            }
+                            else {
+                                act.removeClass('badge-danger');
+                                act.addClass('badge-success');
+                                act.text('Closed');
+                            }
+                            Swal.fire("Success!", "Enquiry status updated", "success");
+
+                        },
+                        failure: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        },
+                        error: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        }
+
+                    });
+
+                            }
+                        });
+                });
+
+            $('a.badge-pill').click(function () {
+
+                var enquiryid = $(this).closest('tr').find('td[name*=EnquiryID]');
+                var Status = $(this).closest('tr').find('span[name=status]');
+
+                var act = $(this);
+
+                if (enquiryid.text().trim() == '') {
+                    enquiryid = $(this).closest('tr').prev('tr').find('td[name=EnquiryID]');
+                    Status = $(this).closest('tr').prev('tr').find('span[name=status]');
+                }
+
+                var formData = new FormData();
+                    formData.append("enquiryid", enquiryid.text().trim());
+
+
+                if (Status.text().trim().toLowerCase() == "open") {
+                        formData.append("active", "Closed");
+                    } else {
+                        formData.append("active", "Open");
+                    }
+
+                    Swal.fire(
+                        {
+                            title: "Do you want to change the status?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes!"
+                        }).then(function (result) {
+                            if (result.value) {
+
+                                  $.ajax({
+                        url: "./Updateenquiry",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+
+                            if (act.text().toLowerCase() == "closed") {
+                                act.removeClass('badge-success');
+                                act.addClass('badge-danger');
+                                act.text('Open');
+                            }
+                            else {
+                                act.removeClass('badge-danger');
+                                act.addClass('badge-success');
+                                act.text('Closed');
+                            }
+                            Swal.fire("Success!", "Enquiry status updated", "success");
+
+                        },
+                        failure: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        },
+                        error: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        }
+
+                    });
+
+                            }
+                        });
+            });
+
+             $('#dt-enquiry').DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+
+            //activating menu li
+            $("li[id*='Referral_Enquiries']").parent().parent().addClass('active open');
+            $("li[id*='Referral_Enquiries']").addClass('active');
+            var AngleElm = $('.open .fa-angle-down');
+            AngleElm.removeClass('fa-angle-down');
+            AngleElm.addClass('fa-angle-up');
+
+                //For Filters
+                $('#cmblang').multiselect({
+                    buttonWidth: '100%',
+                    enableClickableOptGroups: true,
+                    includeSelectAllOption: true,
+                    float: 'left'
+                });
+
+                $('#cmbEnqtype').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left'
+                });
+
+                 $('#cmbprodtype').multiselect({
+                    buttonWidth: '100%',
+                    enableClickableOptGroups: true,
+                    includeSelectAllOption: true,
+                    float: 'left'
+                  });
+
+                $('button.multiselect').each(function () {
+                    $(this).addClass('custom-select');
+                });
+
+                $('#dt-enquiry_paginate').on('click.page-link', function () {
+
+                $('#dt-enquiry').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+                });
+            });
+
+    </script>
+}

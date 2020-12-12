@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "unifiedloginwebapi.fullname" . }}
+  labels:
+    app: {{ template "unifiedloginwebapi.name" . }}
+    chart: {{ template "unifiedloginwebapi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "unifiedloginwebapi.name" . }}
+    release: {{ .Release.Name }}

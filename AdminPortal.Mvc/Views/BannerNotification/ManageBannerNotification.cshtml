@@ -1,0 +1,614 @@
+﻿
+@model AdminPortal.Mvc.Models.Banner.BannerModel
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewBag.Title = "Manage Banners";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var modelData = ViewBag.BannerList == null ? null : ViewBag.BannerList;
+}
+
+
+<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+<script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/css/CustomStyle.css" />
+
+<style>
+    .multiselect {
+        text-align: left;
+    }
+
+    .badge-pill {
+        min-width: 55px;
+    }
+</style>
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item">Manage Banners</li>
+    <li class="breadcrumb-item">Banners & Notifications</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+<div class="subheader">
+    <div class="card col-12">
+        @using (Html.BeginForm("SearchBanner", "BannerNotification", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("Index", "Vehicle", new { id = 0 }) }))//data-resetUrl
+        {
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon  fal fa-ballot-check"></i>
+                        Banners & Notifications
+                    </h1>
+                </div>
+
+
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+
+                    <div class="controls">
+                        <div class="input-group">
+
+                            @Html.TextBoxFor(x => x.SearchModel.Validity, new { @class = "form-control", placeholder = "Select data range", id = "Validity" })
+
+                            <label for="Validity" class="input-group-append">
+                                <span class="input-group-text fs-xl " style="height: 109%;">
+                                    <i class="fal fa-calendar-alt"></i>
+                                </span>
+
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @*<label for="languageList">Select language:</label>*@
+                    @*<select id="languageList" class="form-control mt-2 mb-2"><option>Select language</option></select>*@
+
+                    @Html.DropDownListFor(x => x.SearchModel.SelectedStates, new MultiSelectList(Model.bannerSearch.StateList.Items, "StateCodeI", "StateNameVc", Model.bannerSearch.StateList), null, new { @class = "form-control mt-2 mb-2", id = "StateList", name = "StateList", multiple = "multiple" })
+                    @*@Html.DropDownListFor(m => m.SearchModel.SelectedStates, new SelectList(Model.SearchModel.StateList1, "Value", "Text"), new { @class = "form-control mt-2 mb-2", id = "StateList1", name = "StateList1", multiple = "multiple" })*@
+
+
+
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => Model.SearchModel.SelectedBannerType, new SelectList(new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Select Type", Value = (0).ToString(),Selected=true},
+                                        new SelectListItem { Text = "Banner", Value = (1).ToString()},
+                                        new SelectListItem { Text = "Notification", Value =(2).ToString()},
+                                    }, "Value", "Text"), new { @class = "form-control mt-2 mb-2", id = "BannerTypeList", name = "Languagelist" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+
+                    @Html.DropDownListFor(x => Model.SearchModel.selectedLanguage, Model.SearchModel.LanguageList, new { @class = "form-control mt-2 mb-2", id = "Languagelist", name = "Languagelist" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+
+                    <button type="submit" value="Submit" class="btn btn-primary" id="BannerSearch" name="BannerSearch">Apply</button>
+                </div>
+            </div>
+
+        }
+        <div id="grid" class="row mt-2">
+            <div class="col-12">
+                <div class="panel bg-subtlelight-fade">
+                    <div class="panel-hdr">
+                        <h2>Home Banner Information</h2>
+                        <div class="panel-toolbar float-right mr-2">
+                            @*<ul class="nav nav-tabs">
+            <li>@Html.ActionLink("Add new Tip", "", "", new { @class = "btn btn-light mr-4", data_toggle="tab", href = "#addnew" })</li>
+        </ul>*@
+                            @*@Html.ActionLink("Add Banner/Notification", "AddBannerNotification", "BannerNotification", new { @class = "btn btn-light mr-4", id = "btn_grid" })*@
+                            <button type="button" class="btn btn-light mr-4" id="btn_grid">Add Banner/Notification</button>
+                        </div>
+                        <div class="panel-toolbar float-right pr-2">
+
+                        </div>
+                    </div>
+
+                    <div class="panel-container show">
+                        <div class="panel-content">
+                            <div class="tab-content p-3">
+                                <div class="tab-pane fade show active" id="tab_justified-model" role="tabpanel">
+                                    <table id="dt-banners" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                        <thead>
+                                            <tr>
+                                                <td class="fw-500 text-center">Sl. No</td>
+                                                <td class="fw-500 text-center">Banner ID</td>
+                                                <td class="fw-500 text-center">Title</td>
+                                                <td class="fw-500 text-center">Type</td>
+                                                <td class="fw-500 text-center">Notification Text</td>
+                                                <td class="fw-500 text-center">Image URL</td>
+                                                <td class="fw-500 text-center">Category</td>
+                                                <td class="fw-500 text-center">Validity</td>
+                                                <td class="fw-500 text-center">Action Type</td>
+                                                <td class="fw-500 text-center">HTML Text</td>
+                                                <td class="fw-500 text-center">Action File URL/Action Link</td>
+                                                <td class="fw-500 text-center">Selected Model</td>
+                                                <td class="fw-500 text-center">Location</td>
+                                                <td class="fw-500 text-center">No. of users</td>
+                                                <td class="fw-500 text-center">Status</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @{
+                                                if (modelData != null)
+                                                {
+                                                    int slno = 0;
+                                                    foreach (var itm in modelData)
+                                                    {
+                                                        slno++;
+                                                        <tr>
+                                                            <td id="sno">@slno</td>
+                                                            <td><a href="#"><u>@itm.BannerId</u></a></td>
+                                                            <td>@itm.Title</td>
+                                                            <td>@itm.BannerType</td>
+                                                            <td>@Html.Raw(itm.NotificationText)</td>
+                                                            <td>@itm.BannerImage</td>
+                                                            <td>@itm.Category</td>
+                                                            <td>@itm.fromdate - @itm.todate</td>
+                                                            <td>@itm.ActionType</td>
+                                                            <td>@Html.Raw(itm.Actiontext)</td>
+                                                            <td>@itm.ActionLink</td>
+                                                            <td>@itm.ModelList</td>
+                                                            <td>@itm.StateList</td>
+                                                            <td>@itm.UserCount</td>
+
+                                                            <td class="text-center">
+                                                                @if (itm.Status == "A")
+                                                                {<a href="javascript:void(0);" class="badge badge-success badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status" name="@itm.BannerId">Active</a>}
+                                                                else
+                                                                { <a href="javascript:void(0);" class="badge badge-danger badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status" name="@itm.BannerId">Inactive</a>}
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(x => x.BannerListCount, new { id = "BannerRange" })
+</div>
+<script>
+
+    $(document).ready(function () {
+
+
+
+
+            debugger;
+        var StateListLangArray = [];
+
+
+
+        var StateListLangIDArray=@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["StateList"],
+Newtonsoft.Json.Formatting.Indented))
+
+
+        $.each(StateListLangIDArray, function () {
+                debugger;
+            StateListLangArray.push(this);
+        });
+        debugger;
+        $("#StateList").val(StateListLangArray);
+
+
+        $('#dt-banners').on('click', '.badge-pill', function () {
+            //UpdateStatus(this);
+        });
+
+
+        $('#BannerTypeList').multiselect({
+            buttonWidth: '100%'
+        });
+        $('#Languagelist').multiselect({
+            buttonWidth: '100%'
+        });
+
+        $('#Validity, #datepicker-modal-2').daterangepicker(
+            {
+
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+        var dt = $('#dt-banners').dataTable(
+            {
+                responsive: true,
+                dom:
+                    /*	--- Layout Structure
+                        --- Options
+                        l	-	length changing input control
+                        f	-	filtering input
+                        t	-	The table!
+                        i	-	Table information summary
+                        p	-	pagination control
+                        r	-	processing display element
+                        B	-	buttons
+                        R	-	ColReorder
+                        S	-	Select
+
+                        --- Markup
+                        < and >				- div element
+                        <"class" and >		- div with a class
+                        <"#id" and >		- div with an ID
+                        <"#id.class" and >	- div with an ID and a class
+
+                        --- Further reading
+                        https://datatables.net/reference/option/dom
+                        --------------------------------------
+                     */
+                    "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        text: 'Column Visibility',
+                        titleAttr: 'Col visibility',
+                        className: 'btn-outline-default'
+                    }//,
+                    //{
+                    //    extend: 'csvHtml5',
+                    //    text: 'CSV',
+                    //    titleAttr: 'Generate CSV',
+                    //    className: 'btn-outline-default'
+                    //},
+                    //{
+                    //    extend: 'copyHtml5',
+                    //    text: 'Copy',
+                    //    titleAttr: 'Copy to clipboard',
+                    //    className: 'btn-outline-default'
+                    //},
+                    //{
+                    //    extend: 'print',
+                    //    text: 'Print',
+                    //    titleAttr: 'Print Table',
+                    //    className: 'btn-outline-default'
+                    //}
+
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'text-center'
+                    },
+                    {
+                        targets: 1,
+                        className: 'text-center'
+                    }
+                ]
+            });
+
+        //Load Ajax data on click of Next
+        ////$(document).on('click', '#dt-banners_next a', function () {
+
+        ////    //debugger;
+        ////    var BannerRange = $('#BannerRange').val();
+
+        ////    var newBannerRange = (parseInt(BannerRange) + parseInt(10));
+        ////    console.log('newBannerRange ' + newBannerRange);
+
+        ////    $.get("GetBannerData?count=" + newBannerRange, function (data, status) {
+        ////        //debugger;
+        ////        var t = $('#dt-banners').DataTable();
+
+        ////        var jsonData = JSON.parse(data);
+
+        ////        for (var i = 0; i < jsonData.length; i++) {
+        ////            //debugger;
+        ////            if (i >= BannerRange) {
+        ////                $('#BannerRange').val(newBannerRange);
+        ////                var date1 = new Date(jsonData[i].validfrom);
+        ////                var formattedDate1 = getFormattedDate(date1);
+
+        ////                var date2 = new Date(jsonData[i].validthru);
+        ////                var formattedDate2 = getFormattedDate(date2);
+        ////                var BannerIDElm = '<a href="#"><u>' + jsonData[i].BannerId + '</u>'
+        ////                var status = '';
+        ////                if (jsonData[i].status == 'A') {
+        ////                    status = '<span name="status"><a href="javascript:void(0);" class="badge badge-success badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Active</a></span>';
+        ////                }
+        ////                else {
+        ////                    status = '<span name="status"><a href="javascript:void(0);" class="badge badge-danger badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Inactive</a></span>';
+        ////                }
+
+        ////                var rowNode = t.row.add([
+        ////                    i + 1,
+        ////                    BannerIDElm,
+        ////                    //jsonData[i].tipCategory,
+        ////                    //jsonData[i].tipTitle,
+        ////                    //jsonData[i].tipText,
+        ////                    //formattedDate1,
+        ////                    ////jsonData[i].validfrom.replace('T',' '),
+        ////                    ////jsonData[i].validthru.replace('T', ' '),
+        ////                    //formattedDate2,
+        ////                    jsonData[i].Title,
+        ////                    jsonData[i].BannerType,
+        ////                    jsonData[i].NotificationText,
+        ////                    jsonData[i].BannerImage,
+        ////                    jsonData[i].Category,
+        ////                    jsonData[i].fromdate +'-'+ jsonData[i].todate,
+        ////                    jsonData[i].ActionType,
+        ////                    jsonData[i].Actiontext,
+        ////                    jsonData[i].ActionLink,
+        ////                    jsonData[i].ModelList,
+        ////                    jsonData[i].StateList,
+        ////                    jsonData[i].UserCount,
+        ////                    status
+        ////                ]).draw(false);//.nodes().to$().addClass('text-center');
+
+        ////                //$(rowNode)
+        ////                //    .css('text-align', 'center !important');
+        ////            }
+        ////        }
+
+        ////    });
+        ////});
+
+
+        $('#btn_grid').click(function () {
+            debugger;
+             window.location.href = "@Url.Action("AddBannerNotification", "BannerNotification")";
+
+            return false;
+        });
+
+        $('#dt-banners').on('mouseenter', 'a.badge-pill', function () {
+            debugger;
+            $(this).tooltip();
+        });
+                $('#dt-banners').on('click', 'a.badge-pill', function () {
+
+                    $(this).tooltip();
+                    ////debugger;
+                    var elm = $(this);
+                    var Value = $(this)[0].name;
+                    var activestatus = $(this)[0].innerText;
+                    var languageID = $('#Languagelist').val();
+
+                    console.log(Value);
+                    var targetStatus = '';
+
+                    if (activestatus.trim() == 'Active') {
+                        targetStatus = 0;
+                    }
+                    else {
+                        targetStatus = 1;
+                    }
+
+                    Swal.fire(
+                        {
+                            title: "Do you want to change the status?",
+                            //text: "You won't be able to revert this!",
+                            //type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes!"
+                        }).then(function (result) {
+                            ////debugger;
+                            if (result.value == true) {
+                                UpdateStatus(Value, activestatus, languageID, elm);
+                            }
+
+                        });
+            //UpdateStatus(this);
+        });
+
+        $('#dt-banners_paginate').on('click.page-link', function () {
+
+            $('#dt-banners').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+        });
+
+        $('a.badge-pill').mouseenter(function () {
+            debugger;
+            $(this).tooltip();
+        });
+
+        $('a.badge-pill').click(function () {
+
+            $(this).tooltip();
+
+            ////debugger;
+            var elm = $(this);
+            var Value = $(this)[0].name;
+            var activestatus = $(this)[0].innerText;
+            var languageID = $('#Languagelist').val();
+            console.log(Value);
+            var targetStatus = '';
+
+            if (activestatus.trim() == 'Active') {
+                targetStatus = 0;
+            }
+            else {
+                targetStatus = 1;
+            }
+
+            Swal.fire(
+                {
+                    title: "Do you want to change the status?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    if (result.value == true) {
+                        UpdateStatus(Value, activestatus, languageID, elm);
+                        }
+                });
+            //UpdateStatus(this);
+
+        });
+
+        ////debugger;
+         var messageText =@Html.Raw(ViewBag.Status);
+
+        ////debugger;
+        var tablePage=@Html.Raw(ViewBag.DataCount);
+        console.log(tablePage);
+        if (messageText == "Success") {
+            var BannerId = @Html.Raw(ViewBag.BannerId);
+            Swal.fire("Success!", "New Banner has been added and Banner ID is " + BannerId + ".", "success");
+            //bootbox.alert(
+            //    {
+            //        title: "<i class='fal fa-check-circle text-success mr-2'></i> <span class='text-success fw-500'>Success!</span>",
+            //        message: "<span><strong>Great...</strong> Tip of the day has been successfully added.</span>",
+            //        centerVertical: true,
+            //        className: "modal-alert",
+            //        closeButton: false
+            //    });
+        }
+        else if (messageText == "Failed") {
+            Swal.fire("Failed!", "Unable to add the new BannerOrNotification", "failed");
+        }
+
+        //$('#StateList1').multiselect({
+        //    includeSelectAllOption: true
+        //});
+        //$("#StateList1").multiselect('selectAll', true);
+        //$("#StateList1").multiselect('updateButtonText');
+        //State List
+        $('#StateList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No states selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 states selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+
+
+        @*var BrochureLangArray = [];
+        var BrochureLangIDArray = @Html.Raw(Json.Encode(@ViewData["Language4Brochure"])) ;
+
+
+        $.each(BrochureLangIDArray, function () {
+                debugger;
+            BrochureLangArray.push(this);
+            });
+        $("#AppLanguageListBrochure").val(BrochureLangArray);*@
+
+
+        //activating menu li
+        var pr = document.getElementById('Banners_&_Notifications').parentNode;
+        var pr = pr.parentNode;
+        pr.classList.add('active');
+        pr.classList.add('open');
+        document.getElementById('Banners_&_Notifications').classList.add('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+
+
+        $('#sno').click(function () {
+            debugger;
+            $('.child').tooltip();
+        });
+    });
+
+            function callChangefunc(val) {
+            ////debugger;
+                window.location.href = "@Url.Action("ManageBannerNotification", "BannerNotification")?SelectedLanguage=" + val;
+
+    }
+
+
+    function getFormattedDate(date) {
+        var Str =
+            ("00" + date.getDate()).slice(-2)
+            + "-" + ("00" + (date.getMonth() + 1)).slice(-2)
+            + "-" + date.getFullYear() + " "
+            + ("00" + date.getHours()).slice(-2) + ":"
+            + ("00" + date.getMinutes()).slice(-2)
+            + ":" + ("00" + date.getSeconds()).slice(-2);
+
+        return Str;
+    }
+
+    function UpdateStatus(BannerId, IsActive, LanguageId, elm) {
+        ////debugger;
+        $.post('UpdateStatus',
+            {
+                BannerId: BannerId,
+                IsActive: IsActive,
+                LanguageId: LanguageId
+            })
+            .done(function (data) {
+                ////debugger;
+                if (data == 'Success') {
+                    if (IsActive == "Active") {
+                        elm.text('Inactive');
+                        elm.removeClass('badge-success');
+                        elm.addClass('badge-danger');
+                    }
+                    else {
+                        elm.text('Active');
+                        elm.removeClass('badge-danger');
+                        elm.addClass('badge-success');
+                    }
+                    Swal.fire("Success!", "Status has been changed.", "success");
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        //title: data,
+                        text: data//,
+                        //footer: '<a href>Why do I have this issue?</a>'
+                    });
+                }
+            })
+            .fail(function (xhr, textStatus, error) {
+                ////debugger;
+                Swal.fire({
+                    icon: 'error',
+                    //title: data,
+                    text: xhr.responseText//,
+                    //footer: '<a href>Why do I have this issue?</a>'
+                });
+                console.log(xhr.responseText);
+            });
+    }
+
+
+</script>

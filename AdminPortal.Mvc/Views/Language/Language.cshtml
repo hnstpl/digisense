@@ -1,0 +1,134 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewBag.Title = "Language";
+    Layout = "_Layout";
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.Language.LanguageInfo> LModeldata = ViewBag.Languagelist == null ? null : ViewBag.Languagelist;
+
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-language"></i>Language</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+
+@using (Html.BeginForm("Language", "Language", FormMethod.Post, new { @id = "frmlang" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-9 col-xl-10">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon fal fa-language"></i>
+                        Language
+                    </h1>
+                </div>
+
+            </div>
+            <div>
+                <div class="col-xl-12 row">
+
+                    <div class="alert alert-info" position:absolute; id="sucessmessage" style="display:none;width:500px;margin:0 auto;">
+                    </div>
+
+                    <div class="alert alert-danger" position:absolute; id="errormessage" style="display:none;width:500px;">
+
+                    </div>
+
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2>Language</h2>
+                            <div class="panel-toolbar float-right mr-2">
+
+                            </div>
+                            @*<div class="panel-toolbar float-right pr-2">
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                                </div>*@
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-lang" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">S.No</td>
+                                                    <td class="fw-500 text-center">Language ID</td>
+                                                    <td class="fw-500 text-center">Language Name</td>
+                                                    <td class="fw-500 text-center">Translated Name</td>
+                                                    <td class="fw-500 text-center">Status</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int tpno = 0;
+                                                }
+                                                @foreach (AdminPortal.Mvc.Models.Language.LanguageInfo item in LModeldata)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">  @{ tpno++; } @tpno</td>
+                                                        <td class="text-center">
+                                                            @item.MLanguageID
+                                                        </td>
+                                                        <td style:color="green">
+                                                            @item.MLanguage_Name
+                                                        </td>
+                                                        <td style:color="green">
+                                                            @item.MTranslate_Name
+                                                        </td>
+                                                        <td align="center">
+                                                            @if (item.MACTIVEFLAG_C == "Active")
+                                                            {<span class="badge badge-success badge-pill">Active</span>}
+                                                            else
+                                                            { <span class="badge badge-danger badge-pill">Inactive</span>}
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#dt-lang').dataTable(
+                {
+                    responsive: true
+                });
+
+
+            $('#Language').parent().parent().addClass('active open');
+            $('#Language').addClass('active');
+
+        });
+    </script>
+
+
+}
+

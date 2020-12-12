@@ -1,0 +1,1082 @@
+﻿@model AdminPortal.Mvc.Models.Implements.UpdateImplementsDetails
+@{
+    ViewBag.Title = "Configure";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<link rel="stylesheet" href="~/css/bootstrap-multiselect.css" />
+<script src="~/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/css/CustomStyle.css" />
+<link rel="stylesheet" href="~/smartadmin/css/formplugins/cropperjs/cropper.css" />
+<script src="~/smartadmin/js/formplugins/cropperjs/cropper.js"></script>
+
+<style>
+    .img-thumbnail {
+        height: 10rem !important;
+        width: 12rem !important;
+    }
+</style>
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item">Manage Products</li>
+    <li class="breadcrumb-item">Tractors</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+@Html.Partial("ImageCrop")
+@*<div class="subheader">
+        <h1 class="subheader-title mb-4">
+            <i class="subheader-icon fal fa-exchange"></i>
+            Update Implement Details
+        </h1>
+    </div>*@
+<div class="subheader">
+    <div class="card col-12">
+
+
+        <div class="row border-primary">
+
+            <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-8 mt-3 mb-2 ml-2">
+                <h1 class="subheader-title mb-4">
+                    <i class="subheader-icon fal fa-shield-check"></i>
+                    Update Implement Details
+                </h1>
+            </div>
+
+
+            @*<div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-3 mb-2  float-right">
+                    @Html.HiddenFor(x => x.implementConfiguration.Modelcode)
+                    @Html.DropDownListFor(x => x.selectedLanguage, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "SearchLanguagelist", name = "SearchLanguagelist" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-3 mb-2 float-right">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="TractorConfigSearch" name="TractorConfigSearch">Apply</button>
+                </div>*@
+        </div>
+
+
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    @Model.implementConfiguration.ModelName
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="col-12">
+                        <div class="form-row">
+                            <div class="col-lg-6 col-xl-6 col-sm-12">
+                                <div class="form-row mb-4">
+                                    <div class="col-lg-4">
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            @if (Model.implementConfiguration.ModelImagePath == "")
+                                            {
+                                                <img src="@Url.Content(Model.implementConfiguration.DefaultModelImage)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(Model.implementConfiguration.ModelImagePath)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+                                            @*<img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">*@
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                @Model.implementConfiguration.ModelName
+                                                <small class="text-muted mb-0">@Model.implementConfiguration.CategoryName</small>
+                                            </h5>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @using (Html.BeginForm("ImplementConfigSearch", "Implements", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("ImplementConfigSearch", "Implements", new { id = 0 }) }))//data-resetUrl
+                                {
+                                    <div class="row border-primary">
+
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-7 mt-3 mb-4 ml-2">
+                                            @*<h1 class="subheader-title mb-4">
+                                                    <i class="subheader-icon fal fa-shield-check"></i>
+                                                    Update Implement Details
+                                                </h1>*@
+                                        </div>
+
+
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-3 mb-4  float-right">
+                                            @Html.HiddenFor(x => x.implementConfiguration.Modelcode)
+                                            @Html.DropDownListFor(x => x.selectedLanguage, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "SearchLanguagelist", name = "SearchLanguagelist" })
+                                        </div>
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-3 mb-4 float-right">
+                                            <button type="submit" value="Submit" class="btn btn-primary" id="TractorConfigSearch" name="TractorConfigSearch">Apply</button>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-12">
+                                    <div class="accordion" id="js_demo_accordion-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="javascript:void(0);" class="card-title" data-toggle="collapse" data-target="#js_demo_accordion-4a" aria-expanded="true">
+                                                    Specifications
+                                                    <span class="ml-auto">
+                                                        <span class="collapsed-reveal">
+                                                            <i class="fal fa-minus-circle text-danger fs-xl"></i>
+                                                        </span>
+                                                        <span class="collapsed-hidden">
+                                                            <i class="fal fa-plus-circle text-success fs-xl"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div id="js_demo_accordion-4a" class="collapse show" data-parent="#js_demo_accordion-4">
+                                                <div class="card-body">
+                                                    <div class="col-lg-12 col-sm-12 mr-lg-2">
+                                                        @*<label class="form-label">Specifications</label>*@
+                                                        <table id="dt-spec" class="table m-0 table-bordered table-striped table-hover table-sm" aria-describedby="dt-spec">
+
+                                                            @if (Model.specifications.Count > 0)
+                                                            {
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="fw-500 text-center">Specification Name</td>
+                                                                        <td class="fw-500 text-center">Specification Value</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.specifications != null)
+                                                                    {
+
+                                                                        foreach (var itm in Model.specifications)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@itm.SpecificationName</td>
+                                                                                <td>@itm.SpecififcationValue</td>
+                                                                            </tr>
+
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">
+                                                                            <a id="alertMessage" href="#" class="alert-link" style="cursor:default">No Records Found!.</a>.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="javascript:void(0);" class="card-title collapsed" data-toggle="collapse" data-target="#js_demo_accordion-4b" aria-expanded="false">
+                                                    Benefits
+                                                    <span class="ml-auto">
+                                                        <span class="collapsed-reveal">
+                                                            <i class="fal fa-minus-circle text-danger fs-xl"></i>
+                                                        </span>
+                                                        <span class="collapsed-hidden">
+                                                            <i class="fal fa-plus-circle text-success fs-xl"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div id="js_demo_accordion-4b" class="collapse" data-parent="#js_demo_accordion-4">
+                                                <div class="card-body">
+                                                    <div class="col-lg-12 col-sm-12 mr-lg-2">
+                                                        <table id="dt-spec" class="table m-0 table-bordered table-striped table-hover table-sm" aria-describedby="dt-spec">
+                                                            @if (Model.specifications.Count > 0)
+                                                            {
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="fw-500 text-center">Benefits Name</td>
+                                                                        <td class="fw-500 text-center">Benefits Value</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.specifications != null)
+                                                                    {
+
+                                                                        foreach (var itm in Model.benefits)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@itm.BenefitsName</td>
+                                                                                <td>@itm.BenefitsValue</td>
+                                                                            </tr>
+
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">
+                                                                            <a id="alertMessage" href="#" class="alert-link" style="cursor:default">No Records Found!.</a>.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="javascript:void(0);" class="card-title collapsed" data-toggle="collapse" data-target="#js_demo_accordion-4c" aria-expanded="false">
+                                                    Features
+                                                    <span class="ml-auto">
+                                                        <span class="collapsed-reveal">
+                                                            <i class="fal fa-minus-circle text-danger fs-xl"></i>
+                                                        </span>
+                                                        <span class="collapsed-hidden">
+                                                            <i class="fal fa-plus-circle text-success fs-xl"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div id="js_demo_accordion-4c" class="collapse" data-parent="#js_demo_accordion-4">
+                                                <div class="card-body">
+                                                    <div class="col-lg-12 col-sm-12">
+                                                        <table id="dt-spec" class="table m-0 table-bordered table-striped table-hover table-sm" aria-describedby="dt-spec">
+                                                            @if (Model.features.Count > 0)
+                                                            {
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="fw-500 text-center">Feature Name</td>
+                                                                        <td class="fw-500 text-center">Feature Value</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.features != null)
+                                                                    {
+
+                                                                        foreach (var itm in Model.features)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@itm.FeatureName</td>
+                                                                                <td>@itm.FeatureValue</td>
+                                                                            </tr>
+
+                                                                        }
+                                                                    }
+
+
+                                                                </tbody>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">
+                                                                            <a id="alertMessage" href="#" class="alert-link" style="cursor:default">No Records Found!.</a>.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xl-6 col-sm-12">
+                                <div class="form-row mt-3">
+                                    <div class="col-12">
+                                        <div class="panel">
+                                            <div class="panel-hdr" style="background:#fff !important;">
+                                                <h2 style="color:#333;">
+                                                    Configuration section
+                                                </h2>
+                                            </div>
+                                            @using (Html.BeginForm("UpdateImplementsConfiguration", "Implements", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("UpdateImplementsConfiguration", "Implements", new { id = 0 }) }))//data-resetUrl
+                                            {
+                                                <div class="panel-container show">
+                                                    <div class="panel-content">
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Category</label>
+                                                            </div>
+                                                            <div class="col-lg-4 col-sm-12">
+                                                                <div class="col-lg-12">
+
+                                                                    @Html.HiddenFor(x => x.implementConfiguration.Modelcode)
+                                                                    @Html.DropDownListFor(x => Model.implementConfiguration.SelectedIGCode_VC, Model.implementConfiguration.ModelCategoryList, "Select Category", new { @class = "form-control", id = "ModelCategoryList", name = "ModelCategoryList" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Model Image</label>
+                                                                @Html.HiddenFor(x => x.implementConfiguration.ModelImageUpdated)
+                                                                @Html.HiddenFor(x => x.implementConfiguration.ImageURL)
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+
+                                                                            <button type="button" class="btn btn-default" id="btnmodel" data-toggle="modal" data-target="#default-example-modal-lg" onclick="Cleardata()">Upload Model Image</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-row mb-3" style="display:none" id="imgmodelrow">
+                                                                        <div class="form-group mb-0 col-lg-4">
+                                                                            <div class="img-preview preview-md">
+                                                                                <a href="javascript:void(0);" class="" title="Model">
+                                                                                    <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 modelimageclose1"><i class="fal fa-window-close modelimageclose"></i></span>
+                                                                                </a>
+
+                                                                                <img id="imgmodel" class="image-preview" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Thumb Image</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            @*<div class="custom-file">
+
+                                                                                    @Html.HiddenFor(x => x.implementConfiguration.ThumpImageUpdated)
+                                                                                    @Html.TextBoxFor(x => x.implementConfiguration.ThumpImage, new { @class = "custom-file-input", type = "file", @accept = "image/png", onchange = "ValidateImage(this,'#imgthump','','2000','',0,0,'#imgthumprow','#implementConfiguration_ThumpImageUpdated')" })
+                                                                                    <label class="custom-file-label" for="customFile" id="lblthumimg">Choose Images</label>
+                                                                                </div>*@
+                                                                            @Html.HiddenFor(x => x.implementConfiguration.ThumpImageUpdated)
+                                                                            @Html.HiddenFor(x => x.implementConfiguration.ThumpImageURL)
+                                                                            <button type="button" class="btn btn-default" id="btnthump" data-toggle="modal" data-target="#default-example-modal-lg" onclick="Cleardata()">Upload Thump Image</button>
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="form-row mb-3" style="display:none" id="imgthumprow">
+                                                                        <div class="form-group mb-0 col-lg-4">
+                                                                            <div class="img-preview preview-md">
+                                                                                <a href="javascript:void(0);" class="" title="Thumb">
+                                                                                    <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 thumpimageclose1"><i class="fal fa-window-close thumpimageclose"></i></span>
+                                                                                </a>
+                                                                                <img id="imgthump" class="image-preview" />
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Status</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-12">
+                                                                            <div class="frame-wrap">
+                                                                                <div class="custom-control custom-radio mb-1">
+
+                                                                                    @Html.RadioButtonFor(model => model.implementConfiguration.Status, "true", new { @class = "custom-control-input", @id = "Active" })
+                                                                                    <label class="custom-control-label" for="Active">Active</label>
+                                                                                </div>
+                                                                                <div class="custom-control custom-radio mb-1">
+
+
+                                                                                    @Html.RadioButtonFor(model => model.implementConfiguration.Status, "false", new { @class = "custom-control-input", @id = "Inactive" })
+                                                                                    <label class="custom-control-label" for="Inactive">Inactive</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- panel footer with utility classes -->
+                                                        <div class="panel-content py-2 rounded-bottom border-faded border-left-0 border-right-0 border-bottom-0 text-muted">
+                                                            <div class="col-12 row">
+                                                                <div class="col-lg-11"></div>
+                                                                <div class="col-lg-1">
+                                                                    <button type="submit" value="Submit" class="btn btn-primary" id="ImpConfiguration" name="ImpConfiguration">Submit</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var BtnId = "";
+    $(function () {
+        'use strict';
+
+        //activating menu li
+        $('#Implement_Models').parent().parent().addClass('active open');
+        $('#Implement_Models').addClass('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+
+        /*var console = window.console || {
+            log: function () {}
+        };*/
+
+        var URL = window.URL || window.webkitURL;
+        var $image = $('#image');
+        var $download = $('#download');
+        var $dataX = $('#dataX');
+        var $dataY = $('#dataY');
+        var $dataHeight = $('#dataHeight');
+        var $dataWidth = $('#dataWidth');
+        var $dataRotate = $('#dataRotate');
+        var $dataScaleX = $('#dataScaleX');
+        var $dataScaleY = $('#dataScaleY');
+        var options = {
+            aspectRatio: 5 / 3,
+            preview: '.previewload',
+            crop: function (e) {
+                $dataX.val(Math.round(e.detail.x));
+                $dataY.val(Math.round(e.detail.y));
+                $dataHeight.val(Math.round(480));
+                $dataWidth.val(Math.round(800));
+                $dataRotate.val(e.detail.rotate);
+                $dataScaleX.val(e.detail.scaleX);
+                $dataScaleY.val(e.detail.scaleY);
+                //debugger;
+            },
+            dragMode: 'none',
+            rotatable: false,
+            scalable: false,
+            autoCrop: true,
+            movable: false,
+            toggleDragModeOnDblclick: false,
+            minCropBoxWidth: 800,
+            minCropBoxHeight: 480,
+            cropBoxResizable: false,
+            setData: { x: 91, y: 93, width: 800, height: 480, rotate: 0, scaleX: 1, scaleY: 1 }
+        };
+        var originalImageURL = $image.attr('src');
+        var uploadedImageName = 'cropped.jpg';
+        var uploadedImageType = 'image/jpeg';
+        var uploadedImageURL;
+
+
+        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+
+        //$image.cropper.setData('{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        //$image.cropper("setData", '{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        // Tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Cropper
+        $image.on(
+            {
+
+                ready: function (e) {
+                    console.log(e.type);
+                },
+                cropstart: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropmove: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropend: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                crop: function (e) {
+                    console.log(e.type);
+                },
+                zoom: function (e) {
+                    console.log(e.type, e.detail.ratio);
+                }
+            }).cropper(options);
+
+        // Buttons
+        if (!$.isFunction(document.createElement('canvas').getContext)) {
+            $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
+        }
+
+        if (typeof document.createElement('cropper').style.transition === 'undefined') {
+            $('button[data-method="rotate"]').prop('disabled', true);
+            $('button[data-method="scale"]').prop('disabled', true);
+        }
+
+        // Download
+        if (typeof $download[0].download === 'undefined') {
+            $download.addClass('disabled');
+        }
+
+        // Options
+        $('.docs-toggles').on('change', 'input', function () {
+            var $this = $(this);
+            var name = $this.attr('name');
+            var type = $this.prop('type');
+            var cropBoxData;
+            var canvasData;
+
+            if (!$image.data('cropper')) {
+                return;
+            }
+
+            if (type === 'checkbox') {
+                options[name] = $this.prop('checked');
+                cropBoxData = $image.cropper('getCropBoxData');
+                canvasData = $image.cropper('getCanvasData');
+
+                options.ready = function () {
+                    $image.cropper('setCropBoxData', cropBoxData);
+                    $image.cropper('setCanvasData', canvasData);
+                };
+            }
+            else if (type === 'radio') {
+                options[name] = $this.val();
+            }
+
+            $image.cropper('destroy').cropper(options);
+        });
+
+        // Methods
+        $('.docs-buttons').on('click', '[data-method]', function () {
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+            //debugger;
+
+
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('clear');
+                        }
+
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (uploadedImageType === 'image/jpeg') {
+                            if (!data.option) {
+                                data.option = {};
+                            }
+
+                            data.option.fillColor = '#fff';
+                        }
+
+                        break;
+                }
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('crop');
+                        }
+
+                        break;
+
+                    case 'scaleX':
+                    case 'scaleY':
+                        $(this).data('option', -data.option);
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (result) {
+                            //debugger;
+                            // Bootstrap's Modal
+                            $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                            if (!$download.hasClass('disabled')) {
+                                download.download = uploadedImageName;
+                                $download.attr('href', result.toDataURL(uploadedImageType));
+
+                                $('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+                            }
+                        }
+
+                        break;
+
+                    case 'destroy':
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                            uploadedImageURL = '';
+                            $image.attr('src', originalImageURL);
+                        }
+
+                        break;
+                }
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+            }
+        });
+
+        // Keyboard
+        $(document.body).on('keydown', function (e) {
+            if (e.target !== this || !$image.data('cropper') || this.scrollTop > 300) {
+                return;
+            }
+
+            switch (e.which) {
+                case 37:
+                    e.preventDefault();
+                    $image.cropper('move', -1, 0);
+                    break;
+
+                case 38:
+                    e.preventDefault();
+                    $image.cropper('move', 0, -1);
+                    break;
+
+                case 39:
+                    e.preventDefault();
+                    $image.cropper('move', 1, 0);
+                    break;
+
+                case 40:
+                    e.preventDefault();
+                    $image.cropper('move', 0, 1);
+                    break;
+            }
+        });
+
+        // Import image
+        var $inputImage = $('#inputImage');
+        //debugger;
+        if (URL) {
+            $inputImage.change(function () {
+
+                var files = this.files;
+                var file;
+                //debugger;
+                if (!$image.data('cropper')) {
+                    return;
+                }
+
+                if (files && files.length) {
+                    file = files[0];
+                    debugger;
+                    //if (/^image\/\w+$/.test(file.type)) {
+                    if ($("#inputImage").val().split('.').pop().toLowerCase() == 'png') {
+                        //debugger;
+                        $('.preview-lg').each(function () {
+                            //debugger;
+
+                            $(this).show();
+                        });
+
+                        $('#imgvalidation').hide();
+                        uploadedImageName = file.name;
+                        uploadedImageType = file.type;
+
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                        }
+
+                        uploadedImageURL = URL.createObjectURL(file);
+                        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+                        $inputImage.val('');
+                        $('#btnOk').removeAttr('disabled');
+                    }
+                    else {
+                        $('#btnOk').attr('disabled', 'disabled');
+                        $('#imgvalidation').show();
+
+                        //window.alert('Please choose an image file.');
+                    }
+                }
+            });
+        }
+        else {
+            $inputImage.prop('disabled', true).parent().addClass('disabled');
+        }
+
+        $('#btnOk').click(function () {
+
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+
+            data.method = 'getCroppedCanvas';
+            //debugger;
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+
+                //$('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+
+
+            }
+
+            debugger;
+            //$('#imgmodel').attr("src" ,result.toDataURL(uploadedImageType));
+            //$('#implementConfiguration_ImageURL').val(result.toDataURL(uploadedImageType));
+            //$('#implementConfiguration_ImageURL').val(result.toDataURL(uploadedImageType));
+            //$("#implementConfiguration_ModelImageUpdated").val(1);
+            //$("#imgmodelrow").show();
+
+
+            if (BtnId == "btnmodel") {
+                $('#imgmodel').attr("src", result.toDataURL(uploadedImageType));
+                $('#implementConfiguration_ImageURL').val(result.toDataURL(uploadedImageType));
+                $("#implementConfiguration_ModelImageUpdated").val(1);
+                $("#imgmodelrow").show();
+            }
+            else {
+                $('#imgthump').attr("src", result.toDataURL(uploadedImageType));
+                $('#implementConfiguration_ThumpImageURL').val(result.toDataURL(uploadedImageType));
+                $("#implementConfiguration_ThumpImageUpdated").val(1);
+                $("#imgthumprow").show();
+
+            }
+
+            //var imgcount = $("div#modelimg  img").length;
+            //var imgcnt = imgcount;
+            //var imgtemplate = $("#imgmodelTemplate").clone();
+            //imgcount = imgcount + 1;
+
+            //$.each(imgtemplate.find('img'), function () {
+            //    $(this)[0].id = "imgmodel" + imgcount;
+            //    $(this)[0].src = result.toDataURL(uploadedImageType);
+            //});
+
+            //$.each(imgtemplate.find('select,input'), function () {
+            //    var name = $(this).attr('name');
+            //    if (name == 'tractorConfiguration.ModelImagesTemplate[0].ImageURL') {
+            //        $(this).val(result.toDataURL(uploadedImageType));
+            //    }
+
+            //    name = name.replace('ModelImagesTemplate[0]', 'ModelImageslist[' + imgcnt + ']');
+            //    $(this).attr('name', name);
+            //});
+
+            //$("#modelimg").append(imgtemplate);
+
+
+        });
+
+        $('#default-example-modal-lg').on('shown.bs.modal', function (event) {
+            var triggerElement = $(event.relatedTarget); // Button that triggered the modal
+            BtnId = triggerElement[0].id;
+            debugger;
+            //alert(triggerElement);
+        });
+    });
+
+    //select-2 init
+    $('.select2').select2();
+    $("#flt-brand").select2(
+        {
+            placeholder: "Filter by Brand",
+        });
+
+    $("#flt-hp").select2(
+        {
+            placeholder: "Filter by HP",
+        });
+
+    $("#flt-mdl").select2(
+        {
+            placeholder: "Filter by Model",
+        });
+
+    $(".js-hide-search").select2(
+        {
+            minimumResultsForSearch: 1 / 0
+        });
+    $(".js-max-length").select2(
+        {
+            maximumSelectionLength: 2,
+            placeholder: "Select maximum 2 items"
+        });
+    $('.select2-selection--multiple').each(function () {
+        $(this).addClass('btn-select');
+    });
+
+    $(document).ready(function () {
+
+        $('#ModelCategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+        $('#SearchLanguagelist').multiselect({
+            buttonWidth: '100%'
+        });
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+        $('.modelimageclose1').on('click.modelimageclose', function () {
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    debugger;
+                    if (result.value == true) {
+                        $("#imgmodelrow").hide();
+                        //$("#implementConfiguration_ModelImage")[0].value = "";
+                        $("#implementConfiguration_ImageURL").val("");
+                        //$("#lblModelImage").html("Choose Images");
+                        $("#implementConfiguration_ModelImageUpdated").val(1);
+            //alert("modelimageclose1");
+                    }
+
+                });
+
+
+        });
+
+        $('.thumpimageclose1').on('click.thumpimageclose', function () {
+
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    //debugger;
+                    if (result.value == true) {
+
+                        $("#imgthumprow").hide();
+                        $("#implementConfiguration_ThumpImage")[0].value = "";
+                        $("#lblthumimg").html("Choose Images");
+                        $("#implementConfiguration_ThumpImageUpdated").val(1);
+            //alert("thumpimageclose1");
+                    }
+
+                });
+
+        });
+
+        debugger;
+        var modelimage = '@Model.implementConfiguration.ModelImagePath';
+        var Thumpimage = '@Model.implementConfiguration.ThumpImagePath';
+        if (modelimage == '') {
+            $("#imgmodelrow").hide();
+        }
+        else {
+            $("#imgmodel").attr('src', modelimage);
+            $("#imgmodelrow").show();
+        }
+
+        if (Thumpimage == '') {
+            $("#imgthumprow").hide();
+        }
+        else {
+            $("#imgthump").attr('src', Thumpimage);
+            $("#imgthumprow").show();
+        }
+    });
+
+
+    window.reset = function (e) {
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+    }
+    function resetFile(id) {
+        debugger;
+        const file = document.querySelector('.custom-file-input');
+        file.value = '';
+        //$(id).val('');
+    }
+
+    function clearInput(id) {
+        debugger;
+        var input = $(id);
+        input = input.val('').clone(true);
+    };
+    function ValidateImage(result, imageid, FileExtensions, FileSize, SpanId, imgwidth, imgheight,imgrowid,imgupd) {
+        //debugger;
+        var extension = $(result).val().split('.').pop().toLowerCase();
+        var validFileExtensions = [FileExtensions];
+        if (($.inArray(extension, validFileExtensions) == -1) &&  (FileExtensions !="")) {
+            if (SpanId != "") {
+                $(SpanId).text("Upload only " + validFileExtensions + " file").show();
+            }
+
+            $(result).replaceWith($(result).val('').clone(true));
+        }
+        else {
+            if (Math.round($(result).get(0).files[0].size / 1024) > (FileSize)) {
+                if (SpanId != "") {
+                    $(SpanId).text("Max allowed file size is 2 MB").show();
+                }
+                $(result).replaceWith($(result).val('').clone(true));
+            }
+            else {
+                if (result.files && result.files[0]) {
+
+
+                    var filereader = new FileReader();
+                    filereader.onload = function (e) {
+                        //$("#imgvehicle").attr('src', e.target.result);
+
+                        //debugger;
+                        var img = new Image();
+                        img.src = e.target.result;
+
+                        img.onload = function () {
+                            //debugger;
+                            var width = this.width;
+                            var height = this.height;
+
+                            if ((height == imgheight && width == imgwidth) || ((imgwidth == 0) && (imgheight == 0))) {
+                                if (SpanId != "") {
+                                    $(SpanId).text('').hide();
+                                }
+                                debugger;
+                                $(imageid).attr('src', e.target.result);
+                                $(imgrowid).show();
+                                $(imgupd).val(1);
+                            }
+                            else {
+                                if (SpanId != "") {
+                                    $(SpanId).text("Image width and height Should be " + imgwidth + " * " + imgheight).show();
+                                }
+                                $(result).replaceWith($(result).val('').clone(true));
+                            }
+
+                        }
+
+                    }
+                    filereader.readAsDataURL(result.files[0]);
+                }
+
+            }
+        }
+
+    }
+    function Cleardata() {
+
+        debugger;
+        $('#imgvalidation').hide();
+
+        $('.cropper-view-box').each(function () {
+            $(this).hide();
+        });
+
+        $('.cropper-canvas').each(function () {
+            $(this).hide();
+        });
+        $('.preview-lg').each(function () {
+            //debugger;
+            //alert('test');
+            $(this).hide();
+        });
+        $('#btnOk').attr('disabled', 'disabled');
+    }
+</script>

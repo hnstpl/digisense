@@ -1,0 +1,145 @@
+﻿
+
+<style>
+    /*.img-preview {
+            cursor: pointer;
+        }*/
+    /*.cropper-crop-box {
+        max-height: 400px;
+        max-width: 500px;
+        resize: inherit;
+    }*/
+    /*
+    .cropper-crop-box {
+        max-width: 800px;
+        min-height: 480px;
+        min-width: 800px;
+        max-height: 480px;
+    }*/
+    /*.cropper-container
+    {
+        width:100%;
+    }*/
+    .cropper-container {
+        width: 1021px !important;
+        height: 634px !important;
+    }
+
+    .cropper-bg {
+        width: 1021px;
+        height: 578px;
+    }
+
+    .previewload {
+        min-width: 364px !important;
+        min-height: 200px !important;
+    }
+
+    .modal-content {
+        background-color: transparent !important;
+    }
+</style>
+
+<div class="modal fade" id="default-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document" style="max-width:80% !important">
+        <div class="modal-content">
+
+            <div class="modal-body" style="padding: 0.00rem;background-color:none !important;">
+                <div id="panel-1" class="panel mb-0">
+                    <div class="panel-hdr">
+                        <h2>
+                            Crop <span class="fw-300"><i>Model Images</i></span>
+                        </h2>
+                        <div class="panel-toolbar">
+                            <button class="btn btn-panel" style="background: #Be2d2d" data-dismiss="modal" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                        </div>
+                    </div>
+                    <div class="panel-container show">
+                        <div class="panel-content" style="height: 700px;">
+                            <!-- Content -->
+                            <div class="container" style="margin:0">
+                                <div class="row">
+                                    <div class="col-md-11">
+                                        <!-- <h3>Demo:</h3> -->
+                                        <div class="img-container">
+                                            <img id="image" src="~/img/trans.png" height="100" width="100" alt="Picture">
+                                            @*<img id="image" alt="Picture">*@
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <!-- <h3>Preview:</h3> -->
+                                        <div class="docs-preview clearfix">
+                                            <div class="img-preview preview-lg previewload"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-9 docs-buttons">
+
+                                        <!-- Show the cropped image in modal -->
+                                        <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="getCroppedCanvasTitle">Cropped</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body"></div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.jpg">Download</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-4 mb-3 ml-5">
+                                <div class="btn-group">
+
+                                    <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file">
+                                        <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png">
+                                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="Import image with Blob URLs">
+
+                                            Upload
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="imgvalidation" class="invalid-feedback" style="font-size: 1.2rem !important;">Upload only PNG file.</div>
+                            </div>
+                            <div class="col-md-2 mb-4" style="text-align:right">
+                                <button type="button" class="btn btn-secondary waves-effect waves-themed ml-6" data-dismiss="modal" id="btnClose">Close</button>
+                                <button type="button" class="btn btn-primary waves-effect waves-themed ml-2" id="btnOk" data-dismiss="modal" disabled="">OK</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            @*<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnClose">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnOk" disabled>OK</button>
+                </div>*@
+        </div>
+    </div>
+</div>

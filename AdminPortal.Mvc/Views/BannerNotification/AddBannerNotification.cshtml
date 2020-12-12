@@ -1,0 +1,1288 @@
+﻿@model AdminPortal.Mvc.Models.Banner.AddNewBanner
+
+@{
+    ViewBag.Title = "AddBannerNotofication";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/bootstrap-multiselect.css" />
+<script src="~/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/css/CustomStyle.css" />
+<link rel="stylesheet" href="~/smartadmin/css/formplugins/cropperjs/cropper.css" />
+<script src="~/smartadmin/js/formplugins/cropperjs/cropper.js"></script>
+
+<style>
+    .Banner-Action .multiselect-native-select {
+        min-width: 99%;
+    }
+</style>
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item">Manage Banners</li>
+    <li class="breadcrumb-item">Add Banners/Notifications</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+<partial name="ImageCrop" />
+<div class="subheader">
+    <div class="card col-12">
+        <div class="row mt-2">
+            <div class="col-sm-12 col-md-12 col-lg-9 col-xl-10">
+                <h1 class="subheader-title mt-2 mb-2 pt-1">
+                    <i class="subheader-icon  fal fa-ballot-check"></i>
+                    Add Banners/Notifications
+                </h1>
+            </div>
+
+
+            <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2">
+                @Html.DropDownListFor(x => Model.languageModel.selectedApplicableLanguage, Model.languageModel.LanguageList, "Select Language", new { @class = "custom-select mt-2 mb-2", id = "Languagelist", name = "Languagelist", @onchange = "callChangefunc(this.value)" })
+            </div>
+        </div>
+        <div id="grid" class="row mt-2">
+            <div class="col-12">
+                @using (Html.BeginForm("AddNewBanner", "BannerNotification", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("Index", "Vehicle", new { id = 0 }), novalidate = "", @class = "needs-validation", id = "form1" }))//data-resetUrl
+                {
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2>Add New Banner/Notification</h2>
+                            <div class="panel-toolbar float-right mr-2">
+                                @*<ul class="nav nav-tabs">
+                                        <li>@Html.ActionLink("Add new Tip", "", "", new { @class = "btn btn-light mr-4", data_toggle="tab", href = "#addnew" })</li>
+                                    </ul>*@
+                                @*@Html.ActionLink("Add Banner/Notification", "AddBannerNotification", "BannerNotification", new { @class = "btn btn-light mr-4", id = "btn_grid" })*@
+                            </div>
+                            <div class="panel-toolbar float-right pr-2">
+                            </div>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content mt-5">
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        <label class="form-label pt-lg-2">Subject*</label>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12">
+                                            @*<input type="text" class="form-control" id="subject" />*@
+                                            @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", required = "required" })
+                                            <div class="invalid-feedback">Banner Subject is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Type*</label>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12 ml-lg-3">
+                                        <div class="form-row pl-lg-1 mb-3">
+
+                                            <div class="custom-control custom-radio mb-1">
+                                                @Html.RadioButtonFor(model => model.BannerType, 1, new { @class = "custom-control-input", @id = "Active", @onchange = "BannerTypeChange(this.value)" })
+                                                <label class="custom-control-label" for="Active">Banner</label>
+                                            </div>
+                                            <div class="custom-control custom-radio mb-1 ml-3">
+
+                                                @Html.RadioButtonFor(model => model.BannerType, 2, new { @class = "custom-control-input", @id = "Inactive", @onchange = "BannerTypeChange(this.value)" })
+                                                <label class="custom-control-label" for="Inactive">Notification</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4" id="Imageselection" style="display:none">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Select Image*</label>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12">
+                                            @*<div class="frame-wrap">*@
+                                            @*<div class="custom-file">
+                                                    @Html.TextBoxFor(x => x.BannerImage, new { @class = "custom-file-input", type = "file", @accept = "image/png"})
+                                                    <label class="custom-file-label" for="customFile">Choose Image</label>
+                                                    <span id="spnimage" class="error" style="display: none; color:red;font-weight:bold"></span>
+                                                </div>*@
+                                            @Html.HiddenFor(x => x.BannerImageURL)
+                                            <button type="button" class="btn btn-default" id="btnbanner" data-toggle="modal" data-target="#default-example-modal-lg" onclick="Cleardata()">Upload Banner Image</button>
+                                            @*</div>*@
+                                        </div>
+
+                                        <div class="form-row mt-2" style="display:none" id="imgmodelrow">
+                                            <div class="form-group mb-0 col-lg-4">
+                                                <div class="img-preview preview-md">
+                                                    @*<a href="javascript:void(0);" class="" title="Brochure">
+                                                            <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 modelimageclose1"><i class="fal fa-window-close modelimageclose"></i></span>
+                                                        </a>*@
+
+                                                    <img id="imgmodel" class="image-preview" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4" id="notificationtext">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Notification Text*</label>
+                                    </div>
+                                    <div class="col-lg-9 col-sm-12">
+                                        <div class="col-lg-8">
+                                            <div class="BannerNotification">
+                                                @*<div class="js-summernote" id="notificationtext"></div>*@
+                                                @Html.TextAreaFor(x => x.Notificationtext, new { @class = "form-control js-summernote", required = "required" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row pl-lg-6 mb-4" id="categoryId" style="display:none">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.BannerCategoryList, "Select Category*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 Banner-Category">
+                                            @Html.DropDownListFor(x => Model.SelectedCategory, Model.BannerCategoryList, "Select Category", new { @class = "form-control", id = "BannerCategoryList", name = "BannerCategoryList", @onchange = "BannerCategoryTypeChange(this.value)" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row pl-lg-6 mb-4" id="validityId">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Validity</label>
+                                    </div>
+
+                                    <div class="col-lg-4 col-sm-12 ml-lg-2">
+                                        <div class="controls">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(x => x.Validity, new { @class = "form-control", placeholder = "Select data range", id = "Validity" })
+
+                                                <label for="Validity" class="input-group-append">
+                                                    <span class="input-group-text fs-xl " style="height: 107%;">
+                                                        <i class="fal fa-calendar-alt"></i>
+                                                    </span>
+
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row pl-lg-6 mb-4" id="actiontype" style="display:none">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Action Type*</label>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12 ml-lg-2">
+                                        <div class="form-row pl-lg-1 mb-3 Banner-Action">
+
+                                            @Html.DropDownListFor(x => Model.SelectedBannerAction, Model.BannerActionList, "Select Action", new { @class = "form-control", id = "BannerActionList", name = "BannerActionList", @onchange = "ActionTypeChange(this.value)" })
+
+                                        </div>
+                                        <div class="form-row pl-lg-1 mb-3" id="imageupload" style="display:none">
+                                            <div class="form-group mb-0">
+                                                <label class="form-label">Image (Browser)*</label>
+                                                @*<div class="custom-file">
+                                                        @Html.TextBoxFor(x => x.ActionImage, new { @class = "custom-file-input", type = "file", @accept = "image/png" })
+                                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                                        <span id="spnActionImage" class="error" style="display: none; color:red;font-weight:bold"></span>
+                                                    </div>*@
+                                                @Html.HiddenFor(x => x.ActionImageURL)
+                                                <button type="button" class="btn btn-default ml-3" id="btnaction" data-toggle="modal" data-target="#default-example-modal-lg" onclick="Cleardata()">Upload Action Image</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-row pl-lg-1 mb-3" id="fileupload" style="display:none">
+                                            <div class="form-group mb-0">
+                                                <label class="form-label">File (Browser)*</label>
+                                                <div class="custom-file">
+                                                    @Html.TextBoxFor(x => x.ActionFile, new { @class = "custom-file-input", type = "file", @accept = "video/*,.pdf" })
+                                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                                    <span id="spnActionImage" class="error" style="display: none; color:red;font-weight:bold"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row mt-2" style="display:none" id="imgactionrow">
+                                            <div class="form-group mb-0 col-lg-4">
+                                                <div class="img-preview preview-md">
+                                                    @*<a href="javascript:void(0);" class="" title="Brochure">
+                                                            <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 modelimageclose1"><i class="fal fa-window-close modelimageclose"></i></span>
+                                                        </a>*@
+
+                                                    <img id="imgaction" class="image-preview" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row pl-lg-1 mb-3" id="textupdate" style="display:none;">
+                                            <div class="form-group mb-0 col-12 pl-0 ActionTypetext">
+                                                <label class="form-label">Text/HTML*</label>
+
+                                                @Html.TextAreaFor(x => x.ActionTypeTarget, new { @class = "form-control js-summernote" })
+                                            </div>
+                                        </div>
+                                        <div class="form-row pl-lg-1 mb-3" id="linkUpdate" style="display:none">
+                                            <div class="form-group mb-0 col-12 pl-0 actionlink">
+                                                <label class="form-label">Link*</label>
+
+                                                @Html.TextBoxFor(x => x.ActionLink, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6">
+                                        <label class="form-label pt-lg-2">Applicable to*</label>
+                                    </div>
+                                    <div class="col-lg-9 col-sm-12 form-group">
+                                        <div class="col-lg-12 form-row">
+                                            <div class="frame-wrap">
+
+                                                <div class="custom-control-inline Banner-States">
+                                                    @Html.DropDownListFor(x => x.SelectedStates, new MultiSelectList(Model.StateList.Items, "StateCodeI", "StateNameVc", Model.SelectedStates), null, new { @class = "form-control", id = "StateList", name = "StateList", multiple = "multiple", required = "required" })
+                                                </div>
+
+                                                <div class="custom-control-inline Banner-Districts">
+                                                    @Html.DropDownListFor(x => x.SelectedDistricts, new MultiSelectList(Model.DistrictList.Items, "DistrictCodeVc", "DistrictNameVc", Model.SelectedDistricts), null, new { @class = "form-control", id = "DistrictList", name = "DistrictList", multiple = "multiple", required = "required" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row pl-lg-6 mb-4">
+                                <div class="col-lg-3 col-sm-12 pl-lg-6" style="margin-left:12px;">
+                                    <label class="form-label pt-lg-2">Select Model</label>
+                                </div>
+                                <div class="col-lg-4 col-sm-12 ml-lg-1">
+                                    <div class="form-row pl-lg-1 mb-3">
+                                        @Html.DropDownListFor(x => x.SelectedModel, new MultiSelectList(Model.ModelList.Items, "MODELCODE_VC", "MODELNAME_VC", Model.SelectedModel), null, new { @class = "form-control", id = "ModelList", name = "ModelList", multiple = "multiple" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row pl-lg-6 mb-4">
+                                <div class="col-lg-3 col-sm-12 pl-lg-6" style="margin-left:12px;">
+                                    <label class="form-label pt-lg-2">Select Language*</label>
+                                </div>
+                                <div class="col-lg-4 col-sm-12 ml-lg-1">
+                                    <div class="form-row pl-lg-1 mb-3">
+
+
+                                        <div class="custom-control-inline Banner-Language">
+                                            @Html.DropDownListFor(x => x.languageModel.selectedApplicableLanguage, new MultiSelectList(Model.languageModel.LanguageList.Items, "Languageid", "Languagename", Model.languageModel.selectedApplicableLanguage), null, new { @class = "form-control", id = "AppLanguageList", name = "AppLanguageList", multiple = "multiple" })
+                                        </div>
+
+
+
+                                        <div class="custom-control-inline">
+
+                                            <h5 class="mb-2 mt-2 fw-700 text-center">
+                                                <span id="txtusercount" class="text-success">
+                                                    User Count : 0
+                                                </span>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- panel footer with utility classes -->
+                        <div class="panel-content py-2 rounded-bottom border-faded border-left-0 border-right-0 border-bottom-0 text-muted">
+                            <div class="col-12 row">
+                                <div class="col-lg-10"></div>
+
+
+                                <div class="col-lg-2">
+                                    @*@Html.ActionLink("Submit", "AddBannerNotofication", "CustomerApplication", new { @class = "btn btn-primary" })*@
+                                    @*<button type="button" value="Clear" class="btn btn-sm btn-outline btn-danger" id="NewBannerSubmit" name="NewBannerSubmit">Submit</button>*@
+                                    @*<button type="button" value="Clear" class="btn btn-outline-danger" id="NewBannerSubmit" name="NewBannerSubmit">Clear</button>*@
+                                    @Html.ActionLink("Cancel", "ManageBannerNotification", "BannerNotification", new { @class = "btn btn-outline-danger" })
+                                    <button type="submit" value="Submit" class="btn btn-primary ml-3" id="NewBannerSubmit" name="NewBannerSubmit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        @*</div>
+                                    }
+                                </div>
+                            </div>*@
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var BtnId = "";
+    $(function () {
+        'use strict';
+
+        /*var console = window.console || {
+            log: function () {}
+        };*/
+
+        var URL = window.URL || window.webkitURL;
+        var $image = $('#image');
+        var $download = $('#download');
+        var $dataX = $('#dataX');
+        var $dataY = $('#dataY');
+        var $dataHeight = $('#dataHeight');
+        var $dataWidth = $('#dataWidth');
+        var $dataRotate = $('#dataRotate');
+        var $dataScaleX = $('#dataScaleX');
+        var $dataScaleY = $('#dataScaleY');
+        var options = {
+            aspectRatio: 5 / 3,
+            preview: '.previewload',
+            crop: function (e) {
+                $dataX.val(Math.round(e.detail.x));
+                $dataY.val(Math.round(e.detail.y));
+                $dataHeight.val(Math.round(500));
+                $dataWidth.val(Math.round(228));
+                $dataRotate.val(e.detail.rotate);
+                $dataScaleX.val(e.detail.scaleX);
+                $dataScaleY.val(e.detail.scaleY);
+                //debugger;
+            },
+            dragMode: 'none',
+            rotatable: false,
+            scalable: false,
+            autoCrop: true,
+            movable: false,
+            toggleDragModeOnDblclick: false,
+            minCropBoxWidth: 500,
+            minCropBoxHeight: 228,
+            cropBoxResizable: false,
+            setData: { x: 210, y: 78, width: 500, height: 228, rotate: 0, scaleX: 1, scaleY: 1 }
+        };
+        var originalImageURL = $image.attr('src');
+        var uploadedImageName = 'cropped.jpg';
+        var uploadedImageType = 'image/jpeg';
+        var uploadedImageURL;
+
+
+        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+
+        //$image.cropper.setData('{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        //$image.cropper("setData", '{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        // Tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Cropper
+        $image.on(
+            {
+
+                ready: function (e) {
+                    console.log(e.type);
+                },
+                cropstart: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropmove: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropend: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                crop: function (e) {
+                    console.log(e.type);
+                },
+                zoom: function (e) {
+                    console.log(e.type, e.detail.ratio);
+                }
+            }).cropper(options);
+
+        // Buttons
+        if (!$.isFunction(document.createElement('canvas').getContext)) {
+            $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
+        }
+
+        if (typeof document.createElement('cropper').style.transition === 'undefined') {
+            $('button[data-method="rotate"]').prop('disabled', true);
+            $('button[data-method="scale"]').prop('disabled', true);
+        }
+
+        // Download
+        if (typeof $download[0].download === 'undefined') {
+            $download.addClass('disabled');
+        }
+
+        // Options
+        $('.docs-toggles').on('change', 'input', function () {
+            var $this = $(this);
+            var name = $this.attr('name');
+            var type = $this.prop('type');
+            var cropBoxData;
+            var canvasData;
+
+            if (!$image.data('cropper')) {
+                return;
+            }
+
+            if (type === 'checkbox') {
+                options[name] = $this.prop('checked');
+                cropBoxData = $image.cropper('getCropBoxData');
+                canvasData = $image.cropper('getCanvasData');
+
+                options.ready = function () {
+                    $image.cropper('setCropBoxData', cropBoxData);
+                    $image.cropper('setCanvasData', canvasData);
+                };
+            }
+            else if (type === 'radio') {
+                options[name] = $this.val();
+            }
+
+            $image.cropper('destroy').cropper(options);
+        });
+
+        // Methods
+        $('.docs-buttons').on('click', '[data-method]', function () {
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+            //debugger;
+
+
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('clear');
+                        }
+
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (uploadedImageType === 'image/jpeg') {
+                            if (!data.option) {
+                                data.option = {};
+                            }
+
+                            data.option.fillColor = '#fff';
+                        }
+
+                        break;
+                }
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('crop');
+                        }
+
+                        break;
+
+                    case 'scaleX':
+                    case 'scaleY':
+                        $(this).data('option', -data.option);
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (result) {
+                            //debugger;
+                            // Bootstrap's Modal
+                            $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                            if (!$download.hasClass('disabled')) {
+                                download.download = uploadedImageName;
+                                $download.attr('href', result.toDataURL(uploadedImageType));
+
+                                $('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+                            }
+                        }
+
+                        break;
+
+                    case 'destroy':
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                            uploadedImageURL = '';
+                            $image.attr('src', originalImageURL);
+                        }
+
+                        break;
+                }
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+            }
+        });
+
+        // Keyboard
+        $(document.body).on('keydown', function (e) {
+            if (e.target !== this || !$image.data('cropper') || this.scrollTop > 300) {
+                return;
+            }
+
+            switch (e.which) {
+                case 37:
+                    e.preventDefault();
+                    $image.cropper('move', -1, 0);
+                    break;
+
+                case 38:
+                    e.preventDefault();
+                    $image.cropper('move', 0, -1);
+                    break;
+
+                case 39:
+                    e.preventDefault();
+                    $image.cropper('move', 1, 0);
+                    break;
+
+                case 40:
+                    e.preventDefault();
+                    $image.cropper('move', 0, 1);
+                    break;
+            }
+        });
+
+        // Import image
+        var $inputImage = $('#inputImage');
+        //debugger;
+        if (URL) {
+            $inputImage.change(function () {
+
+                var files = this.files;
+                var file;
+                //debugger;
+                if (!$image.data('cropper')) {
+                    return;
+                }
+
+                if (files && files.length) {
+                    file = files[0];
+                    debugger;
+                    //if (/^image\/\w+$/.test(file.type)) {
+                    if ($("#inputImage").val().split('.').pop().toLowerCase() == 'png' || $("#inputImage").val().split('.').pop().toLowerCase() == 'jpeg') {
+                        //debugger;
+                        $('.preview-lg').each(function () {
+                            //debugger;
+
+                            $(this).show();
+                        });
+
+                        $('#imgvalidation').hide();
+                        uploadedImageName = file.name;
+                        uploadedImageType = file.type;
+
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                        }
+
+                        uploadedImageURL = URL.createObjectURL(file);
+                        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+                        $inputImage.val('');
+                        $('#btnOk').removeAttr('disabled');
+                    }
+                    else {
+                        $('#btnOk').attr('disabled', 'disabled');
+                        $('#imgvalidation').html('Upload only PNG OR JPEG file.').show();
+
+                        //window.alert('Please choose an image file.');
+                    }
+                }
+            });
+        }
+        else {
+            $inputImage.prop('disabled', true).parent().addClass('disabled');
+        }
+
+        $('#btnOk').click(function () {
+
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+
+            data.method = 'getCroppedCanvas';
+            //debugger;
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+
+                //$('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+
+
+            }
+
+            debugger;
+            if (BtnId == "btnbanner") {
+                $('#imgmodel').attr("src", result.toDataURL(uploadedImageType));
+                $('#BannerImageURL').val(result.toDataURL(uploadedImageType));
+                //$("#implementConfiguration_ModelImageUpdated").val(1);
+                $("#imgmodelrow").show();
+            }
+            else {
+                $('#imgaction').attr("src", result.toDataURL(uploadedImageType));
+                $('#ActionImageURL').val(result.toDataURL(uploadedImageType));
+                //$("#implementConfiguration_ModelImageUpdated").val(1);
+                $("#imgactionrow").show();
+
+
+            }
+
+
+
+
+        });
+    });
+    var interval;
+    var timer = function () {
+        interval = setInterval(function () {
+            ////start slide...
+            //if (autoSave.prop('checked'))
+            //    saveToLocal();
+
+            clearInterval(interval);
+        }, 3000);
+    };
+
+    //save
+    var saveToLocal = function () {
+        localStorage.setItem('summernoteData', $('#saveToLocal').summernote("code"));
+        console.log("saved");
+    }
+
+    //delete
+    var removeFromLocal = function () {
+        localStorage.removeItem("summernoteData");
+        $('#saveToLocal').summernote('reset');
+    }
+    $(document).ready(function () {
+
+
+
+        $('#default-example-modal-lg').on('shown.bs.modal', function (event) {
+            var triggerElement = $(event.relatedTarget); // Button that triggered the modal
+            BtnId = triggerElement[0].id;
+            debugger;
+            //alert(triggerElement);
+        });
+        //$('#Imageselection').show()
+
+       // $('#Notificationtext').show();
+        //activating menu li
+        var pr = document.getElementById('Banners_&_Notifications').parentNode;
+        var pr = pr.parentNode;
+        pr.classList.add('active');
+        pr.classList.add('open');
+        document.getElementById('Banners_&_Notifications').classList.add('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+        //debugger;
+         //Validate error message
+
+
+            ////debugger;
+         var messageText =@Html.Raw(ViewBag.Status);
+
+
+
+        if (messageText == "Success") {
+            var BannerId = @Html.Raw(ViewBag.BannerId);
+            Swal.fire("Success!", "New Banner has been added and Banner ID is " + BannerId + ".", "success");
+            //bootbox.alert(
+            //    {
+            //        title: "<i class='fal fa-check-circle text-success mr-2'></i> <span class='text-success fw-500'>Success!</span>",
+            //        message: "<span><strong>Great...</strong> Tip of the day has been successfully added.</span>",
+            //        centerVertical: true,
+            //        className: "modal-alert",
+            //        closeButton: false
+            //    });
+        }
+        else if (messageText == "Failed") {
+            var Errormsg =@Html.Raw(ViewBag.Errormsg);
+            Swal.fire("Failed!", Errormsg, "failed");
+        }
+
+
+        $('#datepicker-1, #datepicker-modal-2').daterangepicker(
+            {
+
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+
+        //init default
+        $('.js-summernote').summernote(
+            {
+                height: 200,
+                tabsize: 2,
+                placeholder: "Type here...",
+                dialogsFade: true,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    //['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                    ['table', ['table']],
+                    //['insert', ['link', 'picture', 'video']],
+                    ['insert', ['link']],
+                    //['view', ['fullscreen', 'codeview', 'help']]
+                    ['view', ['fullscreen', 'help']]
+                ],
+
+                callbacks:
+                {
+                    //restore from localStorage
+                    onInit: function (e) {
+                        $('.js-summernote').summernote("code", localStorage.getItem("summernoteData"));
+                    },
+                    onChange: function (contents, $editable) {
+                        clearInterval(interval);
+                        timer();
+                    }
+                }
+            });
+
+        //select-2 init
+        $('.select2').select2();
+
+        $(".select2-placeholder-multiple").select2(
+            {
+                placeholder: "Select State(s)"
+            });
+
+        //Multi-Select plugin
+
+
+        //Applicable Languages List
+        $('#AppLanguageList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+                GetUserCount();
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        $('#Languagelist').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+                //GetUserCount();
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+        //Category List
+        $('#BannerCategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+
+
+          //Category List
+        $('#BannerCategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+
+
+
+        $('#BannerActionList').multiselect({
+            buttonWidth: '100%',
+        });
+
+        //State List
+        $('#StateList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                GetUserCount();
+                if (options.length === 0) {
+                    return 'No states selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 states selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        //Model List
+        $('#ModelList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No Model selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Models selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        //District List
+        $('#DistrictList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                GetUserCount();
+                if (options.length === 0) {
+                    return 'No Districts selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Districts selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        //Applicable Languages List
+        $('#AppLanguageList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+        //Datepicker
+        $('#Validity, #datepicker-modal-2').daterangepicker(
+            {
+
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+
+
+
+
+
+        $(".js-hide-search").select2(
+            {
+                minimumResultsForSearch: 1 / 0
+            });
+        $(".js-max-length").select2(
+            {
+                maximumSelectionLength: 2,
+                placeholder: "Select maximum 2 items"
+            });
+
+
+        //adding validation tags
+        $('<div class="invalid-feedback">Banner Category is required.</div>').insertAfter('.Banner-Category .btn-group');
+        $('<div class="invalid-feedback">Banner State is required.</div>').insertAfter('.Banner-States .btn-group');
+        $('<div class="invalid-feedback">Banner District is required.</div>').insertAfter('.Banner-Districts .btn-group');
+        $('<div class="invalid-feedback">Applicable Language is required.</div>').insertAfter('.Banner-Language .btn-group');
+        $('<div class="invalid-feedback">Banner Action is required.</div>').insertAfter('.Banner-Action .btn-group');
+        $('<div class="invalid-feedback">Banner ActionLink is required.</div>').insertAfter('.actionlink .form-control');
+        $('<div class="invalid-feedback">Banner ActionText is required.</div>').insertAfter('.ActionTypetext .note-editor');
+        $('<div class="invalid-feedback">Notification is required.</div>').insertAfter('.BannerNotification .note-frame');
+
+
+
+    });
+    function ActionTypeChange(val) {
+        //debugger;
+        $('#fileupload').hide();
+        $('#textupdate').hide();
+        $('#linkUpdate').hide();
+        $('#imageupload').hide();
+
+        if (val == 1 || val == 4) {
+            $('#ActionImage').removeAttr('required');
+            $('#ActionLink').removeAttr('required');
+            $('#ActionTypeTarget').attr('required', 'required');
+            $('#textupdate').show();
+        }
+        else if (val == 2 ) {
+            $('#ActionTypeTarget').removeAttr('required');
+            $('#ActionLink').removeAttr('required');
+            $('#ActionImage').attr('required', 'required');
+            $('#imageupload').show();
+        }
+        else if ( val == 3) {
+            $('#ActionTypeTarget').removeAttr('required');
+            $('#ActionLink').removeAttr('required');
+            $('#ActionImage').attr('required', 'required');
+            $('#fileupload').show();
+        }
+        else if (val == 5) {
+            $('#ActionImage').removeAttr('required');
+            $('#ActionTypeTarget').removeAttr('required');
+            $('#ActionLink').attr('required', 'required');
+            $('#linkUpdate').show();
+        }
+
+
+        }
+
+        function BannerTypeChange(val) {
+            //debugger;
+            $('#Imageselection').hide();
+            $('#notificationtext').hide();
+            $('#actiontype').hide();
+            $('#categoryId').hide();
+            $('#validityId').hide();
+
+            if (val == 1) {
+                $('#Notificationtext').removeAttr('required');
+                $('#actiontype').attr('required', 'required');
+                $('#BannerImage').attr('required', 'required');
+                $('#BannerActionList').attr('required', 'required');
+                $('#BannerCategoryList').attr('required', 'required');
+                $('#Imageselection').show();
+                $('#actiontype').show();
+                $('#categoryId').show();
+                $('#validityId').hide();
+            }
+            else if (val == 2) {
+                $('#BannerCategoryList').removeAttr('required');
+                $('#BannerImage').removeAttr('required');
+                $('#actiontype').removeAttr('required');
+                $('#BannerActionList').removeAttr('required');
+                $('#Notificationtext').attr('required', 'required');
+                $('#notificationtext').show();
+                $('#categoryId').hide();
+                $('#validityId').show();
+            }
+
+
+
+    }
+
+
+    function BannerCategoryTypeChange(val) {
+        //debugger;
+
+
+        $('#validityId').hide();
+
+
+        if (val == 1) {
+            $('#validityId').hide();
+        }
+        else if (val == 2) {
+            $('#validityId').show();
+
+        }
+
+
+
+    }
+         function callChangefunc(val) {
+            //debugger;
+                window.location.href = "@Url.Action("AddBannerNotification", "BannerNotification")?SelectedLanguage=" + val;
+
+        }
+
+        function ValidateBanner() {
+            //debugger;
+
+            var validate = true;
+            if ($("#BannerImage").is(':visible') == true) {
+                var BannerImage = $("#BannerImage").get(0).files[0];
+
+                if (BannerImage == null) {
+                    $('#spnimage').text('Select BannerImage').show();
+                    validate = false;
+                }
+                else {
+                    $('#spnimage').text('').hide();
+                    validate = true;
+                }
+            }
+
+            if ($("#ActionImage").is(':visible') == true) {
+                var ActionImage = $("#ActionImage").get(0).files[0];
+
+                if (ActionImage == null) {
+                    $('#spnActionImage').text('Select ActionImage').show();
+                    validate = false;
+                }
+                else {
+                    $('#spnActionImage').text('').hide();
+                    validate = true;
+                }
+            }
+
+            return validate;
+
+    }
+
+    //validate on submit
+    $("#NewBannerSubmit").click(function (event) {
+
+        //debugger;
+
+        //add required if none selected
+        if ($('#StateList').val() == '' && $('#DistrictList').val() == '') {
+            $('#StateList').attr('Required', 'required');
+            $('#DistrictList').attr('Required', 'required');
+        }
+
+        //remove required if states selected
+        if ($('#StateList').val() != '') {
+            $('#DistrictList').removeAttr('Required');
+        }
+        //remove required if district selected
+        if ($('#DistrictList').val() != '') {
+            $('#StateList').removeAttr('Required');
+        }
+
+        if ($('#AppLanguageList').val() == '') {
+            $('#AppLanguageList').attr('Required', 'required');
+        }
+
+
+        // Fetch form to apply custom Bootstrap validation
+        var form = $("#form1")
+        if (form[0].checkValidity() === false) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.addClass('was-validated');
+        // Perform ajax submit here...
+    });
+    function GetUserCount() {
+        //debugger;
+        //alert("UserCount");
+
+
+        //if (($('#AppLanguageList').val().length > 0) && ($('#StateList').val().length > 0)) {
+            $.post('UserCount',
+                {
+                    SelectedStates: $('#StateList').val(),
+                    selectedApplicableLanguage: $('#AppLanguageList').val(),
+                    SelectedDistricts: $('#DistrictList').val(),
+                    UserCnt: 1,
+
+
+                })
+                .done(function (data) {
+                    //debugger;
+                    if (data.success == true) {
+                        $('#txtusercount').text(data.message).show();
+                    }
+                    else {
+
+                    }
+                })
+                .fail(function (xhr, textStatus, error) {
+                    //debugger;
+
+                    console.log(xhr.responseText);
+                });
+        }
+    //}
+
+    function Cleardata() {
+
+        debugger;
+        $('#imgvalidation').hide();
+
+        $('.cropper-view-box').each(function () {
+            $(this).hide();
+        });
+
+        $('.cropper-canvas').each(function () {
+            $(this).hide();
+        });
+        $('.preview-lg').each(function () {
+            //debugger;
+            //alert('test');
+            $(this).hide();
+        });
+        $('#btnOk').attr('disabled', 'disabled');
+    }
+
+</script>

@@ -1,0 +1,3234 @@
+﻿@model AdminPortal.Mvc.Models.Tractors.UpdateTractorDetails
+
+@{
+    ViewBag.Title = "Configure";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+    <script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="~/Custom/CustomStyle.css" />
+    <link rel="stylesheet" href="~/SmartAdmin/css/formplugins/cropperjs/cropper.css" />
+    <script src="~/SmartAdmin/js/formplugins/cropperjs/cropper.js"></script>*@
+
+<link rel="stylesheet" href="~/css/bootstrap-multiselect.css" />
+<script src="~/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/css/CustomStyle.css" />
+<link rel="stylesheet" href="~/smartadmin/css/formplugins/cropperjs/cropper.css" />
+<script src="~/smartadmin/js/formplugins/cropperjs/cropper.js"></script>
+
+
+@*<link id="vendorsbundle" rel="stylesheet" media="screen, print" href="~/SmartAdmin/css/vendors.bundle.css">
+    <script src="~/SmartAdmin/js/vendors.bundle.js"></script>
+    <script src="~/SmartAdmin/js/app.bundle.js"></script>*@
+<style>
+    /*.img-preview {
+            cursor: pointer;
+        }*/
+    /*.cropper-container
+    {
+        width:100%;
+    }*/
+
+    .modal-backdrop {
+        z-index: -1;
+    }
+
+    .multiselectcheckbox {
+        width: 38em;
+        height: 15em;
+        border: solid 1px #c0c0c0;
+        overflow: auto;
+    }
+
+        .multiselectcheckbox label {
+            display: block;
+        }
+
+    .multiselectcheckbox-on {
+        color: #ffffff;
+        background-color: #000099;
+    }
+</style>
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item">Manage Products</li>
+    <li class="breadcrumb-item">Tractors</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+@*<div class="subheader">
+        <h1 class="subheader-title mb-4">
+            <i class="subheader-icon fal fa-exchange"></i>
+            Update Tractor Details
+        </h1>
+    </div>*@
+
+@Html.Partial("ImageCrop")
+<div class="subheader">
+    <div class="card col-12">
+
+        <div class="row border-primary">
+
+            <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-8 mt-3 mb-2 ml-2">
+                <h1 class="subheader-title mb-4">
+                    <i class="subheader-icon fal fa-shield-check"></i>
+                    Update Tractor Details
+                </h1>
+            </div>
+
+
+            @*<div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-3 mb-2  float-right">
+                    @Html.HiddenFor(x => x.tractorConfiguration.Modelcode)
+                    @Html.DropDownListFor(x => x.selectedLanguage, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "SearchLanguagelist", name = "SearchLanguagelist" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-3 mb-2 float-right">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="TractorConfigSearch" name="TractorConfigSearch">Apply</button>
+                </div>*@
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    @Model.tractorConfiguration.ModelName
+                </h2>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="col-12">
+                        <div class="form-row">
+                            <div class="col-lg-6 col-xl-6 col-sm-12">
+                                <div class="form-row mb-4">
+
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            @if (string.IsNullOrEmpty(Model.tractorConfiguration.Model1ImagePath) == true)
+                                            {
+                                                <img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(Model.tractorConfiguration.Model1ImagePath)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                @Model.tractorConfiguration.ModelName
+                                                <small class="text-muted mb-0">@Model.tractorConfiguration.CategoryName</small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            @if (string.IsNullOrEmpty(Model.tractorConfiguration.Model2ImagePath) == true)
+                                            {
+                                                <img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(Model.tractorConfiguration.Model2ImagePath)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                @Model.tractorConfiguration.ModelName
+                                                <small class="text-muted mb-0">@Model.tractorConfiguration.CategoryName</small>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                                            @if (string.IsNullOrEmpty(Model.tractorConfiguration.Model3ImagePath) == true)
+                                            {
+                                                <img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(Model.tractorConfiguration.Model3ImagePath)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                            }
+
+                                            <h5 class="mb-0 fw-700 text-center mt-3">
+                                                @Model.tractorConfiguration.ModelName
+                                                <small class="text-muted mb-0">@Model.tractorConfiguration.CategoryName</small>
+                                            </h5>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+
+
+                                @using (Html.BeginForm("TractorConfigSearch", "Tractors", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("TractorSearch", "Tractors", new { id = 0 }) }))//data-resetUrl
+                                {
+                                    <div class="row border-primary">
+
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-7 mt-3 mb-4 ml-2">
+                                            @*<h1 class="subheader-title mb-4">
+                                                    <i class="subheader-icon fal fa-shield-check"></i>
+                                                    Update Tractor Details
+                                                </h1>*@
+                                        </div>
+
+
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-3 mb-4  float-right">
+                                            @Html.HiddenFor(x => x.tractorConfiguration.Modelcode)
+                                            @Html.DropDownListFor(x => x.selectedLanguage, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "SearchLanguagelist", name = "SearchLanguagelist" })
+                                        </div>
+                                        <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-3 mb-4 float-right">
+                                            <button type="submit" value="Submit" class="btn btn-primary" id="TractorConfigSearch" name="TractorConfigSearch">Apply</button>
+                                        </div>
+                                    </div>
+                                }
+
+
+
+
+                                <div class="col-12">
+                                    <div class="accordion" id="js_demo_accordion-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="javascript:void(0);" class="card-title" data-toggle="collapse" data-target="#js_demo_accordion-4a" aria-expanded="true">
+                                                    Specifications
+                                                    <span class="ml-auto">
+                                                        <span class="collapsed-reveal">
+                                                            <i class="fal fa-minus-circle text-danger fs-xl"></i>
+                                                        </span>
+                                                        <span class="collapsed-hidden">
+                                                            <i class="fal fa-plus-circle text-success fs-xl"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div id="js_demo_accordion-4a" class="collapse show" data-parent="#js_demo_accordion-4">
+                                                <div class="card-body">
+                                                    <div class="col-lg-12 col-sm-12 mr-lg-2">
+                                                        <table id="dt-spec" class="table m-0 table-bordered table-striped table-hover table-sm" aria-describedby="dt-spec">
+
+                                                            @if (Model.specifications.Count > 0)
+                                                            {
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="fw-500 text-center" style="width:50% !important">Specification Name</td>
+                                                                        <td class="fw-500 text-center" style="width:50% !important">Specification Value</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.specifications != null)
+                                                                    {
+
+                                                                        foreach (var itmgroup in Model.specificationGroups)
+                                                                        {
+                                                                            var specifications = Model.specifications.Where(x => x.SpecCategoryId == itmgroup.SpecCategoryId);
+                                                                            <tr>
+                                                                                <td colspan="2" class="text-center">
+                                                                                    <label class="form-label">@itmgroup.SpecCategoryName</label>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            foreach (var itm in specifications)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@itm.SpecificationName</td>
+                                                                                    <td>@itm.SpecififcationValue</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            }
+                                                            else
+                                                            {
+                                                                @*<thead>
+                                                                        <tr>
+                                                                            <td class="fw-500 text-center" style="width:50% !important">Specification Name</td>
+                                                                            <td class="fw-500 text-center" style="width:50% !important">Specification Value</td>
+                                                                        </tr>
+                                                                    </thead>*@
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">
+                                                                            @*<label class="form-label">No Data!!</label>*@
+
+                                                                            <a id="alertMessage" href="#" class="alert-link" style="cursor:default">No Records Found!.</a>.
+
+                                                                        </td>
+                                                                    </tr>
+
+
+                                                                </tbody>
+                                                            }
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="javascript:void(0);" class="card-title collapsed" data-toggle="collapse" data-target="#js_demo_accordion-4c" aria-expanded="false">
+                                                    Features
+                                                    <span class="ml-auto">
+                                                        <span class="collapsed-reveal">
+                                                            <i class="fal fa-minus-circle text-danger fs-xl"></i>
+                                                        </span>
+                                                        <span class="collapsed-hidden">
+                                                            <i class="fal fa-plus-circle text-success fs-xl"></i>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div id="js_demo_accordion-4c" class="collapse" data-parent="#js_demo_accordion-4">
+                                                <div class="card-body">
+                                                    <div class="col-lg-12 col-sm-12">
+                                                        <table id="dt-spec" class="table m-0 table-bordered table-striped table-hover table-sm" aria-describedby="dt-spec">
+                                                            @if (Model.features.Count > 0)
+                                                            {
+                                                                <thead>
+                                                                    <tr>
+                                                                        <td class="fw-500 text-center">Feature Name</td>
+                                                                        <td class="fw-500 text-center">Feature Value</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.features != null)
+                                                                    {
+
+                                                                        foreach (var itm in Model.features)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@itm.FeatureName</td>
+                                                                                <td>@itm.FeatureValue</td>
+                                                                            </tr>
+
+                                                                        }
+                                                                    }
+
+
+                                                                </tbody>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-center">
+                                                                            <a id="alertMessage" href="#" class="alert-link" style="cursor:default">No Records Found!.</a>.
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            }
+
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xl-6 col-sm-12">
+                                <div class="form-row mt-3">
+                                    <div class="col-12">
+                                        <div class="panel">
+                                            <div class="panel-hdr" style="background:#fff !important;">
+                                                <h2 style="color:#333;">
+                                                    Configuration section
+                                                </h2>
+                                            </div>
+                                            @using (Html.BeginForm("TractorConfiguration", "Tractors", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("UpdateImplementsConfiguration", "Implements", new { id = 0 }), novalidate = "", @class = "needs-validation", id = "form1" }))//data-resetUrl
+                                            {
+                                                <div class="panel-container show">
+                                                    <div class="panel-content">
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">User's Manual</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            <div class="custom-file">
+
+
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.Modelcode)
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.LanguageId)
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.UserManaulUpdated)
+                                                                                @*@Html.TextBoxFor(x => x.tractorConfiguration.UserManual, new { @class = "custom-file-input", type = "file", accept = ".pdf", onchange = "LoadIconImage('#imguserManaul','#tractorConfiguration_UserManual','#tractorConfiguration_UserManaulUpdated','pdf')" })*@
+
+
+
+
+                                                                                @*<label class="custom-file-label" id="lblUserManaul" for="customFile">Choose User's Manual</label>*@
+
+                                                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#default-example-modal-UserManual" data-backdrop="static" data-keyboard="false">Add User's Manual</button>
+
+
+                                                                                <div class="modal fade " id="default-example-modal-UserManual" role="dialog" tabindex="-1" aria-hidden="true" style='z-index:99;'>
+                                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                        <div class="modal-content" style="background-color:#fff !important;">
+                                                                                            <div class="modal-header">
+                                                                                                <h4 class="modal-title">
+                                                                                                    User's Manual
+
+                                                                                                </h4>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+
+
+                                                                                                <div class="row align-middle">
+                                                                                                    <div class="col-sm-4">
+                                                                                                        <label class="form-label pt-lg-2">Select Language</label>
+
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-8">
+                                                                                                        <div class="form-row mb-3">
+                                                                                                            <div class="form-group mb-0 col-lg-12">
+                                                                                                                @Html.DropDownListFor(x => x.tractorConfiguration.Language4UserManual, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "AppLanguageList", name = "AppLanguageList", multiple = "multiple" })
+                                                                                                                <div class="invalid-feedback">Video Category is required.</div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+
+
+                                                                                                <div class="row align-middle">
+                                                                                                    <div class="col-sm-4">
+                                                                                                        <label class="form-label pt-lg-2">User Manual</label>
+
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-8">
+                                                                                                        <div class="form-row mb-3">
+                                                                                                            <div class="form-group mb-0 col-lg-12">
+
+
+                                                                                                                <div class="custom-file">
+
+                                                                                                                    @Html.TextBoxFor(x => x.tractorConfiguration.UserManual, new { @class = "custom-file-input", type = "file", accept = ".pdf", onchange = "LoadIconImage('#imguserManaul','#tractorConfiguration_UserManual','#tractorConfiguration_UserManaulUpdated','pdf')" })
+                                                                                                                    <label class="custom-file-label" for="customFile" id="usermanualfile">Choose User's Manual</label>
+                                                                                                                    <div class="invalid-feedback">Upload only PDF file</div>
+
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+
+
+                                                                                                    </div>
+
+                                                                                                </div>
+
+
+
+
+                                                                                                <div class="form-row mb-3" id="imguserManaul" style="display:none">
+
+                                                                                                    <div class="form-group mb-0 col-lg-4">
+
+                                                                                                    </div>
+                                                                                                    <div class="form-group mb-0 ml-1 col-lg-4">
+                                                                                                        <div class="img-preview preview-md">
+                                                                                                            <a href="javascript:void(0);" class="" title="UserManual">
+                                                                                                                <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 UserManualclose1"><i class="fal fa-window-close UserManualclose"></i></span>
+                                                                                                            </a>
+                                                                                                            <img src="~/img/pdf5.png" class="image-preview" />
+
+
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+
+
+
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="BtnUpd">OK</button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+
+                                                                                </div>
+
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">360° View</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            <div class="custom-file">
+
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration._360Updated)
+                                                                                <label class="custom-file-label" id="lbl360" for="Tractor360View">Choose 360° .Zip</label>
+                                                                                @Html.TextBoxFor(x => x.tractorConfiguration.Tractor360View, new { @class = "custom-file-input", type = "file", accept = ".zip", onchange = "LoadIconImage('#img360','#tractorConfiguration_Tractor360View','#tractorConfiguration__360Updated','zip')" })
+                                                                                <div class="invalid-feedback">Upload only Zip file</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-row mb-3" id="img360" style="display:none">
+                                                                        <div class="form-group mb-0 col-lg-4">
+                                                                            <div class="img-preview preview-md">
+                                                                                <a href="javascript:void(0);" class="" title="360">
+                                                                                    <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 _360close1"><i class="fal fa-window-close _360close"></i></span>
+                                                                                </a>
+                                                                                <img src="~/img/zip2.png" class="image-preview" />
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Model Image</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#default-example-modal-lg" onclick="Cleardata()">Upload Model Images</button>
+                                                                            @*<div class="custom-file" style="display:none" id="Modelimage1">
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImage1Updated)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImage)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.Model1ImagePath)
+                                                                                    @Html.TextBoxFor(x => x.tractorConfiguration.ModelImage1, new { @class = "custom-file-input", type = "file", @accept = "image/png", onchange = "ValidateImage(this,'#imgmodel1','','2000','',0,0,'#imgmodelrow1','#tractorConfiguration_ModelImage1Updated','#tractorConfiguration_Model1ImagePath')" })
+                                                                                    <label class="custom-file-label" for="customFile" id="lblModelImage">Choose Image1</label>
+                                                                                </div>
+                                                                                <div class="custom-file" style="display:none" id="Modelimage2">
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImage2Updated)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.Model2ImagePath)
+                                                                                    @Html.TextBoxFor(x => x.tractorConfiguration.ModelImage2, new { @class = "custom-file-input", type = "file", @accept = "image/png", onchange = "ValidateImage(this,'#imgmodel2','','2000','',0,0,'#imgmodelrow2','#tractorConfiguration_ModelImage2Updated','#tractorConfiguration_Model2ImagePath')" })
+                                                                                    <label class="custom-file-label" for="customFile" id="lblModelImage">Choose Image2</label>
+                                                                                </div>
+                                                                                <div class="custom-file" style="display:none" id="Modelimage3">
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImage3Updated)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.Model3ImagePath)
+                                                                                    @Html.TextBoxFor(x => x.tractorConfiguration.ModelImage3, new { @class = "custom-file-input", type = "file", @accept = "image/png", onchange = "ValidateImage(this,'#imgmodel3','','2000','',0,0,'#imgmodelrow3','#tractorConfiguration_ModelImage3Updated','tractorConfiguration_Model3ImagePath')" })
+                                                                                    <label class="custom-file-label" for="customFile" id="lblModelImage">Choose Image3</label>
+                                                                                </div>*@
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div style="display:none;">
+                                                                        <div class="form-group mb-0 col-lg-4" id="imgmodelTemplate">
+                                                                            <div class="img-preview preview-md tractorimg">
+                                                                                <a href="javascript:void(0);" class="" title="Model">
+                                                                                    <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 modelimageclose1"><i class="fal fa-window-close modelimageclose1"></i></span>
+                                                                                </a>
+
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.ModelImagesTemplate[0].ID)
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.ModelImagesTemplate[0].ImageURL)
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.ModelImagesTemplate[0].ActiveFlag)
+                                                                                <img id="@Model.tractorConfiguration.ModelImagesTemplate[0].ID" class="image-preview" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-row mb-3" id="modelimg" style="max-height: 160px;overflow-y: auto;">
+
+
+                                                                        @for (int i = 0; i < Model.tractorConfiguration.ModelImageslist.Count; i++)
+                                                                        {
+                                                                            string imgid = "img" + i + 1;
+                                                                            string divid = "imgmodel" + i + 1;
+
+                                                                            <div class="form-group mb-0 col-lg-4" id="@imgid">
+                                                                                <div class="img-preview preview-md tractorimg">
+                                                                                    <a href="javascript:void(0);" class="" title="Model">
+                                                                                        <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 modelimageclose1"><i class="fal fa-window-close modelimageclose1"></i></span>
+                                                                                    </a>
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImageslist[i].ID)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImageslist[i].ImageURL)
+                                                                                    @Html.HiddenFor(x => x.tractorConfiguration.ModelImageslist[i].ActiveFlag)
+                                                                                    <img id="@Model.tractorConfiguration.ModelImageslist[i].ID" src="@Url.Content(Model.tractorConfiguration.ModelImageslist[i].ImageURL)" class="image-preview" />
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Thumb Image</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            <div class="custom-file">
+
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.ThumpImageUpdated)
+                                                                                @Html.TextBoxFor(x => x.tractorConfiguration.ThumpImage, new { @class = "custom-file-input", type = "file", @accept = "image/png", onchange = "ValidateImage(this,'#imgthump','','2000','',0,0,'#imgthumprow','#tractorConfiguration_ThumpImageUpdated')" })
+                                                                                <label class="custom-file-label" for="customFile" id="lblthumimg">Choose Images</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="form-row mb-3" style="display:none" id="imgthumprow">
+                                                                        <div class="form-group mb-0 col-lg-4">
+                                                                            <div class="img-preview preview-md">
+                                                                                <a href="javascript:void(0);" class="" title="Thumb">
+                                                                                    <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 thumpimageclose1"><i class="fal fa-window-close thumpimageclose1"></i></span>
+                                                                                </a>
+
+                                                                                <img id="imgthump" class="image-preview" />
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">DIY Video</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+
+                                                                            <button type="button" class="btn btn-default" data-toggle="modal" id="btnAddDIYVideo" data-target="#default-example-modal-center" data-backdrop="static" data-keyboard="false">Add DIY Video</button>
+
+
+                                                                            <div class="modal fade" id="default-example-modal-center" tabindex="-1" role="dialog" aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                                    <div class="modal-content" style="background-color:#fff !important;">
+                                                                                        <div class="modal-header">
+                                                                                            <h4 class="modal-title">
+                                                                                                DIY Video
+
+                                                                                            </h4>
+                                                                                            <button type="button" id="btnclose" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
+
+
+                                                                                            <div class="row align-middle">
+                                                                                                <div class="col-sm-4">
+                                                                                                    <label class="form-label pt-lg-2">Video Category</label>
+
+                                                                                                </div>
+                                                                                                <div class="col-sm-8">
+                                                                                                    <div class="form-row mb-3">
+                                                                                                        <div class="form-group mb-0 col-lg-12">
+
+
+                                                                                                            @Html.HiddenFor(x => x.tractorConfiguration.dIYVideo.VideoId)
+                                                                                                            @Html.DropDownListFor(x => x.tractorConfiguration.dIYVideo.SelectedVideoCategory, Model.tractorConfiguration.dIYVideo.VideoCategoryList, "Select Category", new { @class = "form-control mt-2 mb-2", id = "CategoryList", name = "CategoryList", @onchange = "VideoLists(this.value)" })
+                                                                                                            <div class="invalid-feedback">Video Category is required.</div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+
+                                                                                            <div class="row align-middle">
+                                                                                                <div class="col-sm-4">
+                                                                                                    <label class="form-label pt-lg-2">Video List</label>
+
+                                                                                                </div>
+                                                                                                <div class="col-sm-8">
+                                                                                                    <div class="form-row mb-3">
+                                                                                                        <div class="form-group mb-0 col-lg-12">
+
+                                                                                                            @Html.DropDownListFor(x => x.tractorConfiguration.dIYVideo.SelectVideosList, new SelectList(string.Empty, "Value", "Text"), "Select Video", new { @class = "form-control mt-2 mb-2", id = "DIYVideosList", name = "DIYVideosList", @onchange = "GetLanguages4Video(this.value)" })
+                                                                                                            <div class="invalid-feedback">VideoName is required.</div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+
+                                                                                            <div class="row align-middle">
+                                                                                                <div class="col-sm-4">
+                                                                                                    <label class="form-label pt-lg-2">Video Available</label>
+
+                                                                                                </div>
+                                                                                                <div class="col-sm-8">
+                                                                                                    <div class="form-row mb-3">
+                                                                                                        <div class="form-group mb-0 col-lg-12">
+
+                                                                                                            @*@Html.DropDownListFor(x => x.tractorConfiguration.dIYVideo.selectedLanguage, Model.tractorConfiguration.dIYVideo.LanguageList, new { @class = "form-control mt-2 mb-2", id = "DIYLangageList", name = "DIYLangageList", Multiple = "Multiple" })*@
+                                                                                                            <div id="chkbox" class="multiselectcheckbox">
+                                                                                                                @foreach (var item in Model.tractorConfiguration.dIYVideo.LanguageList)
+                                                                                                                {
+                                                                                                                    <label><input type="checkbox" name="option[]" disabled="disabled" value="@item.Value" />@item.Text</label>
+                                                                                                                }
+                                                                                                            </div>
+                                                                                                            <div class="invalid-feedback">VideoDescription is required.</div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <div class="row align-middle">
+                                                                                                <div class="col-sm-4">
+
+                                                                                                </div>
+                                                                                                <div class="col-sm-4">
+
+                                                                                                </div>
+                                                                                                <div class="col-sm-4">
+
+                                                                                                    <button type="button" class="btn btn-primary float-right" id="BtnAddDIY">Add</button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row align-middle">
+                                                                                                @*<div class="col-sm-4">
+                                                                                                        <label class="form-label pt-lg-2">Selected Video</label>
+
+                                                                                                    </div>*@
+                                                                                                <div class="col-sm-12">
+                                                                                                    <div class="form-row mb-3">
+                                                                                                        <div class="form-group mb-0 col-lg-12">
+
+                                                                                                            <table id="dt-diytemplate" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info" style="display:none">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <td id="slno" class="text-center fw-500">Sl. No</td>
+                                                                                                                        <td class="text-center fw-500">Video ID</td>
+                                                                                                                        <td class="text-center fw-500">Video Language</td>
+                                                                                                                        <td class="text-center fw-500">Video Name</td>
+                                                                                                                        <td class="text-center fw-500">Action</td>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tbody>
+
+                                                                                                                    <tr class="contacts-record-template" style="display:none">
+                                                                                                                        <td>1</td>
+                                                                                                                        <td>
+                                                                                                                            @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingTemplate[0].VideoId)
+                                                                                                                            <span>@Model.tractorConfiguration.dIYVideoMappingTemplate[0].VideoId </span>
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingTemplate[0].LanguageId)
+                                                                                                                            <span>@Model.tractorConfiguration.dIYVideoMappingTemplate[0].LanguageName </span>
+                                                                                                                        </td>
+                                                                                                                        <td>
+                                                                                                                            @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingTemplate[0].VideoName)
+                                                                                                                            <span>@Model.tractorConfiguration.dIYVideoMappingTemplate[0].VideoName </span>
+                                                                                                                        </td>
+                                                                                                                        <td class="text-center fw-500">
+                                                                                                                            @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingTemplate[0].ActiveFlag)
+                                                                                                                            <button type="button" class="btn btn-danger m-t-n-xs" id="DeleteRow">Remove</button>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+
+                                                                                                                </tbody>
+                                                                                                            </table>
+                                                                                                            <table id="dt-diy" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <td id="slno" class="text-center fw-500">Sl. No</td>
+                                                                                                                        <td class="text-center fw-500">Video ID</td>
+                                                                                                                        <td class="text-center fw-500">Video Language</td>
+                                                                                                                        <td class="text-center fw-500">Video Name</td>
+                                                                                                                        <td class="text-center fw-500">Action</td>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tbody>
+                                                                                                                    @for (int i = 0; i < Model.tractorConfiguration.dIYVideoMappingList.Count; i++)
+                                                                                                                    {
+                                                                                                                        var j = i + 1;
+                                                                                                                        <tr class="contacts-record">
+                                                                                                                            <td>@j</td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingList[i].VideoId)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingList[i].VideoId </span>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingList[i].LanguageId)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingList[i].LanguageName </span>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingList[i].VideoName)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingList[i].VideoName </span>
+                                                                                                                            </td>
+                                                                                                                            <td class="text-center fw-500">
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingList[i].ActiveFlag)
+                                                                                                                                <button type="button" class="btn btn-danger m-t-n-xs" id="DeleteRow">Remove</button>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    }
+                                                                                                                </tbody>
+                                                                                                            </table>
+                                                                                                            <table id="dt-diyorg" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info" style="display:none">
+                                                                                                                <thead>
+                                                                                                                    <tr>
+                                                                                                                        <td id="slno" class="text-center fw-500">Sl. No</td>
+                                                                                                                        <td class="text-center fw-500">Video ID</td>
+                                                                                                                        <td class="text-center fw-500">Video Language</td>
+                                                                                                                        <td class="text-center fw-500">Video Name</td>
+                                                                                                                        <td class="text-center fw-500">Action</td>
+                                                                                                                    </tr>
+                                                                                                                </thead>
+                                                                                                                <tbody>
+                                                                                                                    @for (int i = 0; i < Model.tractorConfiguration.dIYVideoMappingListOrg.Count; i++)
+                                                                                                                    {
+                                                                                                                        var j = i + 1;
+                                                                                                                        <tr class="contacts-record">
+                                                                                                                            <td>@j</td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingListOrg[i].VideoId)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingListOrg[i].VideoId </span>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingListOrg[i].LanguageId)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingListOrg[i].LanguageName </span>
+                                                                                                                            </td>
+                                                                                                                            <td>
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingListOrg[i].VideoName)
+                                                                                                                                <span>@Model.tractorConfiguration.dIYVideoMappingListOrg[i].VideoName </span>
+                                                                                                                            </td>
+                                                                                                                            <td class="text-center fw-500">
+                                                                                                                                @Html.HiddenFor(m => m.tractorConfiguration.dIYVideoMappingListOrg[i].ActiveFlag)
+                                                                                                                                <button type="button" class="btn btn-danger m-t-n-xs" id="DeleteRow">Remove</button>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    }
+                                                                                                                </tbody>
+
+                                                                                                            </table>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCancel">Cancel</button>
+                                                                                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="BtnOK">OK</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Brochure</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-8">
+                                                                            <div class="custom-file">
+                                                                                @*<input type="file" class="custom-file-input" id="360-v">*@
+                                                                                @Html.HiddenFor(x => x.tractorConfiguration.BrochureUpdated)
+                                                                                @*@Html.TextBoxFor(x => x.tractorConfiguration.Brochure, new { @class = "custom-file-input", type = "file", accept = ".pdf", onchange = "LoadIconImage('#imgBrochure','#tractorConfiguration_Brochure','#tractorConfiguration_BrochureUpdated','pdf')" })
+                                                                                    <label class="custom-file-label" id="lblBrochure" for="customFile">Choose Brochure</label>
+                                                                                    <div class="invalid-feedback">Upload only PDF file</div>*@
+
+
+
+                                                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#default-example-modal-Brochure">Add Brochure</button>
+
+
+                                                                                <div class="modal fade " id="default-example-modal-Brochure" role="dialog" aria-hidden="true" style="z-index:99;">
+                                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                        <div class="modal-content" style="background-color:#fff !important;">
+                                                                                            <div class="modal-header">
+                                                                                                <h4 class="modal-title">
+                                                                                                    Brochure
+
+                                                                                                </h4>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+
+
+                                                                                                <div class="row align-middle">
+                                                                                                    <div class="col-sm-4">
+                                                                                                        <label class="form-label pt-lg-2">Select Language</label>
+
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-8">
+                                                                                                        <div class="form-row mb-3">
+                                                                                                            <div class="form-group mb-0 col-lg-12">
+                                                                                                                @Html.DropDownListFor(x => x.tractorConfiguration.Language4Brochure, Model.LanguageList, new { @class = "form-control mt-2 mb-2", id = "AppLanguageListBrochure", name = "AppLanguageListBrochure", multiple = "multiple" })
+                                                                                                                <div class="invalid-feedback">Video Category is required.</div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+
+
+                                                                                                <div class="row align-middle">
+                                                                                                    <div class="col-sm-4">
+                                                                                                        <label class="form-label pt-lg-2">Brochure</label>
+
+                                                                                                    </div>
+                                                                                                    <div class="col-sm-8">
+                                                                                                        <div class="form-row mb-3">
+                                                                                                            <div class="form-group mb-0 col-lg-12">
+                                                                                                                <div class="custom-file">
+                                                                                                                    @Html.TextBoxFor(x => x.tractorConfiguration.Brochure, new { @class = "custom-file-input", type = "file", accept = ".pdf", onchange = "LoadIconImage('#imgBrochure','#tractorConfiguration_Brochure','#tractorConfiguration_BrochureUpdated','pdf')" })
+                                                                                                                    <label class="custom-file-label" id="lblBrochure" for="customFile">Choose Brochure</label>
+                                                                                                                    <div class="invalid-feedback">Upload only PDF file</div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+
+
+                                                                                                    </div>
+
+                                                                                                </div>
+
+
+
+                                                                                                <div class="form-row mb-3" id="imgBrochure" style="display:none">
+                                                                                                    <div class="form-group mb-0 col-lg-4">
+
+                                                                                                    </div>
+                                                                                                    <div class="form-group mb-0 ml-1 col-lg-4">
+                                                                                                        <div class="img-preview preview-md">
+                                                                                                            <a href="javascript:void(0);" class="" title="Brochure">
+                                                                                                                <span class="badge rounded-pill position-absolute pos-top pos-right mr-3 Brochureclose1"><i class="fal fa-window-close Brochureclose"></i></span>
+                                                                                                            </a>
+                                                                                                            <img src="~/img/pdf5.png" class="image-preview" />
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="BtnUpd">OK</button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        @*<div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">HP Range</label>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <select class="select2 form-control w-100" disabled="disabled" id="hp-sel">
+                                                                            <option value="00">15 HP</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">Brand</label>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <select class="select2 form-control w-100" disabled="disabled" id="brand-sel">
+                                                                            <option value="00">ARJUN</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">Model</label>
+                                                                </div>
+                                                                <div class="col-lg-4 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <select class="select2 form-control w-100" disabled="disabled" id="model-sel">
+                                                                            <option value="00">DI 4WD</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*@
+
+
+                                                        <div class="row pl-lg-6 mb-4">
+                                                            <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                <label class="form-label pt-lg-2">Status</label>
+                                                            </div>
+                                                            <div class="col-lg-8 col-sm-12">
+                                                                <div class="col-lg-12">
+                                                                    <div class="form-row mb-3">
+                                                                        <div class="form-group mb-0 col-lg-12">
+                                                                            <div class="frame-wrap">
+                                                                                <div class="custom-control custom-radio mb-1">
+                                                                                    @*<input type="radio" class="custom-control-input active" id="primary-war" name="warrenty">*@
+                                                                                    @*@Html.RadioButtonFor(x => x.implementConfiguration.Isactive, new { id = "primary-war", name = "warrenty",  @class = "custom-control-input active" })
+                                                                                        <label class="custom-control-label" for="primary-war">Active</label>*@
+                                                                                    @Html.RadioButtonFor(model => model.tractorConfiguration.Status, "true", new { @class = "custom-control-input", @id = "Active" })
+                                                                                    <label class="custom-control-label" for="Active">Active</label>
+                                                                                </div>
+                                                                                <div class="custom-control custom-radio mb-1">
+                                                                                    @*<input type="radio" class="custom-control-input active" id="addon-war" name="warrenty">*@
+                                                                                    @*@Html.RadioButtonFor(x => x.implementConfiguration.Isactive, new { id = "addon-war", name = "warrenty", @class = "custom-control-input active" })
+                                                                                        <label class="custom-control-label" for="addon-war">Inactive</label>*@
+
+                                                                                    @Html.RadioButtonFor(model => model.tractorConfiguration.Status, "false", new { @class = "custom-control-input", @id = "Inactive" })
+                                                                                    <label class="custom-control-label" for="Inactive">Inactive</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">DIY Video</label>
+                                                                </div>
+                                                                <div class="col-lg-8 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-row mb-3">
+                                                                            <div class="form-group mb-0 col-lg-8">
+                                                                                <div class="custom-file">
+                                                                                    <input type="file" class="custom-file-input" id="360-v">
+                                                                                    <label class="custom-file-label" for="customFile">Choose video file</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">Brochure</label>
+                                                                </div>
+                                                                <div class="col-lg-8 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-row mb-3">
+                                                                            <div class="form-group mb-0 col-lg-8">
+                                                                                <div class="custom-file">
+                                                                                    <input type="file" class="custom-file-input" id="360-v">
+                                                                                    <label class="custom-file-label" for="customFile">Choose Brochure</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row pl-lg-6 mb-4">
+                                                                <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                                                    <label class="form-label pt-lg-2">Warrenty</label>
+                                                                </div>
+                                                                <div class="col-lg-8 col-sm-12">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-row mb-3">
+                                                                            <div class="form-group mb-0 col-lg-12">
+                                                                                <div class="frame-wrap">
+                                                                                    <div class="custom-control custom-radio mb-1">
+                                                                                        <input type="radio" class="custom-control-input active" id="primary-war" name="warrenty">
+                                                                                        <label class="custom-control-label" for="primary-war">Primary</label>
+                                                                                    </div>
+                                                                                    <div class="custom-control custom-radio mb-1">
+                                                                                        <input type="radio" class="custom-control-input active" id="addon-war" name="warrenty">
+                                                                                        <label class="custom-control-label" for="addon-war">Addon</label>
+                                                                                    </div>
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <input type="radio" class="custom-control-input active" id="extended-war" name="warrenty">
+                                                                                        <label class="custom-control-label" for="extended-war">Extended</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*@
+                                                        <!-- panel footer with utility classes -->
+                                                        <div class="panel-content py-2 rounded-bottom border-faded border-left-0 border-right-0 border-bottom-0 text-muted">
+                                                            <div class="col-12 row">
+                                                                <div class="col-lg-11"></div>
+                                                                <div class="col-lg-1">
+                                                                    @*@Html.ActionLink("Submit", "AddBannerNotofication", "CustomerApplication", new { @class = "btn btn-primary" })*@
+                                                                    @*@Html.ActionLink("Cancel", "ManageBannerNotification", "BannerNotification", new { @class = "btn btn-outline-danger" })*@
+                                                                    <button type="submit" value="Submit" class="btn btn-primary" id="ImpConfiguration" name="ImpConfiguration">Submit</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var dt;
+    var dt1;
+    $(function () {
+
+        //activating menu li
+        $('#Tractor_Models').parent().parent().addClass('active open');
+        $('#Tractor_Models').addClass('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+
+        'use strict';
+
+        /*var console = window.console || {
+            log: function () {}
+        };*/
+
+        var URL = window.URL || window.webkitURL;
+        var $image = $('#image');
+        var $download = $('#download');
+        var $dataX = $('#dataX');
+        var $dataY = $('#dataY');
+        var $dataHeight = $('#dataHeight');
+        var $dataWidth = $('#dataWidth');
+        var $dataRotate = $('#dataRotate');
+        var $dataScaleX = $('#dataScaleX');
+        var $dataScaleY = $('#dataScaleY');
+        var options = {
+            aspectRatio: 5 / 3,
+            preview: '.previewload',
+            crop: function (e) {
+                $dataX.val(Math.round(e.detail.x));
+                $dataY.val(Math.round(e.detail.y));
+                $dataHeight.val(Math.round(480));
+                $dataWidth.val(Math.round(800));
+                $dataRotate.val(e.detail.rotate);
+                $dataScaleX.val(e.detail.scaleX);
+                $dataScaleY.val(e.detail.scaleY);
+                //debugger;
+            },
+            dragMode: 'none',
+            rotatable: false,
+            scalable: false,
+            autoCrop: true,
+            movable: false,
+            toggleDragModeOnDblclick: false,
+            minCropBoxWidth: 800,
+            minCropBoxHeight: 480,
+            cropBoxResizable:false,
+            setData: {x:91,y:93,width:800,height:480,rotate:0,scaleX:1,scaleY:1}
+        };
+        var originalImageURL = $image.attr('src');
+        var uploadedImageName = 'cropped.jpg';
+        var uploadedImageType = 'image/jpeg';
+        var uploadedImageURL;
+
+
+        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+
+        //$image.cropper.setData('{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        //$image.cropper("setData", '{"x":91.2,"y":92.79999999999995,"width":800,"height":480,"rotate":0,"scaleX":1,"scaleY":1}');
+
+        // Tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Cropper
+        $image.on(
+            {
+
+                ready: function (e) {
+                    console.log(e.type);
+                },
+                cropstart: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropmove: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                cropend: function (e) {
+                    console.log(e.type, e.detail.action);
+                },
+                crop: function (e) {
+                    console.log(e.type);
+                },
+                zoom: function (e) {
+                    console.log(e.type, e.detail.ratio);
+                }
+            }).cropper(options);
+
+        // Buttons
+        if (!$.isFunction(document.createElement('canvas').getContext)) {
+            $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
+        }
+
+        if (typeof document.createElement('cropper').style.transition === 'undefined') {
+            $('button[data-method="rotate"]').prop('disabled', true);
+            $('button[data-method="scale"]').prop('disabled', true);
+        }
+
+        // Download
+        if (typeof $download[0].download === 'undefined') {
+            $download.addClass('disabled');
+        }
+
+        // Options
+        $('.docs-toggles').on('change', 'input', function () {
+            var $this = $(this);
+            var name = $this.attr('name');
+            var type = $this.prop('type');
+            var cropBoxData;
+            var canvasData;
+
+            if (!$image.data('cropper')) {
+                return;
+            }
+
+            if (type === 'checkbox') {
+                options[name] = $this.prop('checked');
+                cropBoxData = $image.cropper('getCropBoxData');
+                canvasData = $image.cropper('getCanvasData');
+
+                options.ready = function () {
+                    $image.cropper('setCropBoxData', cropBoxData);
+                    $image.cropper('setCanvasData', canvasData);
+                };
+            }
+            else if (type === 'radio') {
+                options[name] = $this.val();
+            }
+            debugger;
+            $image.cropper('destroy').cropper(options);
+        });
+
+        // Methods
+        $('.docs-buttons').on('click', '[data-method]', function () {
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+            //debugger;
+
+
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('clear');
+                        }
+
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (uploadedImageType === 'image/jpeg') {
+                            if (!data.option) {
+                                data.option = {};
+                            }
+
+                            data.option.fillColor = '#fff';
+                        }
+
+                        break;
+                }
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+
+                switch (data.method) {
+                    case 'rotate':
+                        if (cropped && options.viewMode > 0) {
+                            $image.cropper('crop');
+                        }
+
+                        break;
+
+                    case 'scaleX':
+                    case 'scaleY':
+                        $(this).data('option', -data.option);
+                        break;
+
+                    case 'getCroppedCanvas':
+                        if (result) {
+                            //debugger;
+                            // Bootstrap's Modal
+                            $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                            if (!$download.hasClass('disabled')) {
+                                download.download = uploadedImageName;
+                                $download.attr('href', result.toDataURL(uploadedImageType));
+
+                                $('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+                            }
+                        }
+
+                        break;
+
+                    case 'destroy':
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                            uploadedImageURL = '';
+                            $image.attr('src', originalImageURL);
+                        }
+
+                        break;
+                }
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+            }
+        });
+
+        // Keyboard
+        $(document.body).on('keydown', function (e) {
+            if (e.target !== this || !$image.data('cropper') || this.scrollTop > 300) {
+                return;
+            }
+
+            switch (e.which) {
+                case 37:
+                    e.preventDefault();
+                    $image.cropper('move', -1, 0);
+                    break;
+
+                case 38:
+                    e.preventDefault();
+                    $image.cropper('move', 0, -1);
+                    break;
+
+                case 39:
+                    e.preventDefault();
+                    $image.cropper('move', 1, 0);
+                    break;
+
+                case 40:
+                    e.preventDefault();
+                    $image.cropper('move', 0, 1);
+                    break;
+            }
+        });
+
+        // Import image
+        var $inputImage = $('#inputImage');
+        //debugger;
+        if (URL) {
+            $inputImage.change(function () {
+
+                var files = this.files;
+                var file;
+                //debugger;
+                if (!$image.data('cropper')) {
+                    return;
+                }
+
+                if (files && files.length) {
+                    file = files[0];
+                    debugger;
+                    //if (/^image\/\w+$/.test(file.type)) {
+                    if ($("#inputImage").val().split('.').pop().toLowerCase() == 'png') {
+                        //debugger;
+                        $('.preview-lg').each(function () {
+                            //debugger;
+
+                            $(this).show();
+                        });
+
+                        $('#imgvalidation').hide();
+                        uploadedImageName = file.name;
+                        uploadedImageType = file.type;
+
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                        }
+
+                        uploadedImageURL = URL.createObjectURL(file);
+                        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+                        $inputImage.val('');
+                        $('#btnOk').removeAttr('disabled');
+                    }
+                    else {
+                        $('#btnOk').attr('disabled', 'disabled');
+                        $('#imgvalidation').show();
+
+                        //window.alert('Please choose an image file.');
+                    }
+                }
+            });
+        }
+        else {
+            $inputImage.prop('disabled', true).parent().addClass('disabled');
+        }
+
+        $('#btnOk').click(function () {
+            //debugger;
+            //$("#imgmodelrow1").clone().insertAfter("div.modelimg:last");
+
+
+            var $this = $(this);
+            var data = $this.data();
+            var cropper = $image.data('cropper');
+            var cropped;
+            var $target;
+            var result;
+
+            if ($this.prop('disabled') || $this.hasClass('disabled')) {
+                return;
+            }
+
+            data.method = 'getCroppedCanvas';
+            //debugger;
+            if (cropper && data.method) {
+                data = $.extend(
+                    {}, data); // Clone a new one
+
+                if (typeof data.target !== 'undefined') {
+                    $target = $(data.target);
+
+                    if (typeof data.option === 'undefined') {
+                        try {
+                            data.option = JSON.parse($target.val());
+                        }
+                        catch (e) {
+                            console.log(e.message);
+                        }
+                    }
+                }
+
+                cropped = cropper.cropped;
+
+                //switch (data.method) {
+                //    case 'rotate':
+                //        if (cropped && options.viewMode > 0) {
+                //            $image.cropper('clear');
+                //        }
+
+                //        break;
+
+                //    case 'getCroppedCanvas':
+                //        if (uploadedImageType === 'image/jpeg') {
+                //            if (!data.option) {
+                //                data.option = {};
+                //            }
+
+                //            data.option.fillColor = '#fff';
+                //        }
+
+                //        break;
+                //}
+
+                result = $image.cropper(data.method, data.option, data.secondOption);
+                //debugger;
+                $('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+                //switch (data.method) {
+                //    case 'rotate':
+                //        if (cropped && options.viewMode > 0) {
+                //            $image.cropper('crop');
+                //        }
+
+                //        break;
+
+                //    case 'scaleX':
+                //    case 'scaleY':
+                //        $(this).data('option', -data.option);
+                //        break;
+
+                //    case 'getCroppedCanvas':
+                //        if (result) {
+                //            //debugger;
+                //            // Bootstrap's Modal
+                //            $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+
+                //            if (!$download.hasClass('disabled')) {
+                //                download.download = uploadedImageName;
+                //                $download.attr('href', result.toDataURL(uploadedImageType));
+
+                //                $('#tractorConfiguration_ModelImage').val(result.toDataURL(uploadedImageType));
+
+                //            }
+                //        }
+
+                //        break;
+
+                //    case 'destroy':
+                //        if (uploadedImageURL) {
+                //            URL.revokeObjectURL(uploadedImageURL);
+                //            uploadedImageURL = '';
+                //            $image.attr('src', originalImageURL);
+                //        }
+
+                //        break;
+                //}
+
+                if ($.isPlainObject(result) && $target) {
+                    try {
+                        $target.val(JSON.stringify(result));
+                    }
+                    catch (e) {
+                        console.log(e.message);
+                    }
+                }
+
+
+            }
+
+
+           // var file = document.getElementById($('#tractorConfiguration_ModelImage').val()).src;
+
+            var imgcount = $("div#modelimg  img").length;
+            var imgcnt = imgcount;
+            var imgtemplate = $("#imgmodelTemplate").clone();
+            imgcount = imgcount + 1;
+
+
+
+            $.each(imgtemplate.find('img'), function () {
+                //debugger;
+                $(this)[0].id = "imgmodel" + imgcount;
+                $(this)[0].src = result.toDataURL(uploadedImageType);
+            });
+
+
+            $.each(imgtemplate.find('select,input'), function () {
+                //debugger;
+                //var Id = $(this).attr('Id');
+                //$(Id).val('0').attr("selected", "selected");
+                //$(Id).val('0');
+                var name = $(this).attr('name');
+
+
+                if (name == 'tractorConfiguration.ModelImagesTemplate[0].ImageURL') {
+
+                    $(this).val(result.toDataURL(uploadedImageType));
+                }
+
+                //if (name == 'Variantslist4Template[0].IsDeleted') {
+                //    ////debugger;
+                //    var Id = $(this)[0].id.replace('Variantslist4Template_0_', tabclass + '_' + count + '_');
+                //    $(this).attr('id', Id);
+                //    $(this).val(0);
+                //}
+                name = name.replace('ModelImagesTemplate[0]', 'ModelImageslist[' + imgcnt+ ']');
+
+                $(this).attr('name', name);
+
+
+                //platformid = '';
+                //if (name == 'tractorConfiguration.ModelImagesTemplate[0].ID') {
+
+                //    ////debugger;
+                //    platformid = name.replace('ModelImagesTemplate[0]', 'ModelImageslist[' + count + ']');
+                //    platformid = tabclass + "_" + count + "__PlatFormId";
+                //    //alert(platformid);
+                //    $(this).attr('id', platformid);
+                //    //alert($(this).attr('id'));
+                //    platformid = tabclass + "_" + count + "__PlatFormId";
+                //}
+
+
+            });
+            //debugger;
+            $("#modelimg").append(imgtemplate);
+
+            //$("#btnClose").click();
+            //$('#default-example-modal-lg').modal({ hide: true });
+            //$('#default-example-modal-lg').attr("style", "display:none");
+            //$('#default-example-modal-lg').hidden = true;
+        });
+
+
+        $("#ImpConfiguration").click(function (event) {
+
+            //debugger;
+
+            ////add required if none selected
+            //if ($('#StateList').val() == '' && $('#DistrictList').val() == '') {
+            //    $('#StateList').attr('Required', 'required');
+            //    $('#DistrictList').attr('Required', 'required');
+            //}
+
+            ////remove required if states selected
+            //if ($('#StateList').val() != '') {
+            //    $('#DistrictList').removeAttr('Required');
+            //}
+            ////remove required if district selected
+            //if ($('#DistrictList').val() != '') {
+            //    $('#StateList').removeAttr('Required');
+            //}
+
+            //if ($('#AppLanguageList').val() == '') {
+            //    $('#AppLanguageList').attr('Required', 'required');
+            //}
+            //alert(uploadedImageURL);
+            //alert(originalImageURL);
+            //$('#tractorConfiguration_ModelImage').val();
+            // Fetch form to apply custom Bootstrap validation
+            var form = $("#form1")
+            if (form[0].checkValidity() === false) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.addClass('was-validated');
+            // Perform ajax submit here...
+        });
+    });
+
+    //select-2 init
+    $('.select2').select2();
+    $("#flt-brand").select2(
+        {
+            placeholder: "Filter by Brand",
+        });
+
+    $("#flt-hp").select2(
+        {
+            placeholder: "Filter by HP",
+        });
+
+    $("#flt-mdl").select2(
+        {
+            placeholder: "Filter by Model",
+        });
+
+    $(".js-hide-search").select2(
+        {
+            minimumResultsForSearch: 1 / 0
+        });
+    $(".js-max-length").select2(
+        {
+            maximumSelectionLength: 2,
+            placeholder: "Select maximum 2 items"
+        });
+    $('.select2-selection--multiple').each(function () {
+        $(this).addClass('btn-select');
+    });
+
+    $(document).ready(function () {
+
+
+            var UserManualLangArray = [];
+            var UserManualLangIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["Language4UserManual"])) ;
+
+
+        $.each(UserManualLangIDArray, function () {
+                debugger;
+            UserManualLangArray.push(this);
+        });
+
+        debugger;
+        $("#AppLanguageList").val(UserManualLangArray);
+
+
+        var BrochureLangArray = [];
+        var BrochureLangIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["Language4Brochure"])) ;
+
+
+        $.each(BrochureLangIDArray, function () {
+                debugger;
+            BrochureLangArray.push(this);
+            });
+        $("#AppLanguageListBrochure").val(BrochureLangArray);
+
+
+
+        $('#BtnAddDIY').click(function () {
+
+
+            debugger;
+
+            var checkboxid = $('#chkbox');
+            var checkboxes = $(checkboxid).find("input:checkbox:checked");
+            checkboxes.each(function () {
+            //$("select[id^='chkbox']").children('option:selected').each(function () {
+                debugger;
+                if ($(this)[0].disabled == false) {
+
+                    var VideoId = $('#DIYVideosList').val();
+                    //var VideoName = $('#DIYVideosList option:selected').text();
+                    var VideoName= $('#DIYVideosList option:selected').text().split("-")[1].trim()
+                    var LanguageId = $(this).val();
+                    var LanguageName = $($(this)[0].parentElement)[0].textContent;
+                    debugger;
+
+
+                    AddTableRow('#dt-diyorg', 'tractorConfiguration.dIYVideoMappingListOrg', dt1, LanguageId, LanguageName);
+                    AddTableRow('#dt-diy', 'tractorConfiguration.dIYVideoMappingList', dt, LanguageId, LanguageName);
+                  //var tabname1 = '#dt-diyorg';
+                  //var  tabclass1 = 'tractorConfiguration.dIYVideoMappingListOrg';
+
+
+
+                  //  var count1 = $(tabname1 + " tr.contacts-record").length;
+
+
+                  //  var template1 = $('#dt-diytemplate .contacts-record-template').clone();
+
+
+                  //  $.each(template1.find('input[type=text]'), function () {
+                  //      debugger;
+                  //      var name = $(this).attr('name');
+                  //      name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass1 + '[' + count1 + ']');
+                  //      $(this).attr('name', name);
+                  //  });
+                  //  $.each(template1.find('td i'), function () {
+                  //      debugger;
+
+                  //      $(this)[0].id = count;
+                  //  });
+                  //  $.each(template1.find('select,input'), function () {
+                  //      debugger;
+                  //      var name = $(this).attr('name');
+
+                  //      name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass1 + '[' + count1 + ']');
+                  //      id = $(this).attr('id');
+                  //      id = id.replace("tractorConfiguration_dIYVideoMappingTemplate_0__", "tractorConfiguration_dIYVideoMappingListOrg_" + count1 + "__");
+                  //      $(this).attr('name', name);
+
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoId") {
+                  //          debugger;
+                  //          $(this).val(VideoId);
+                  //          $($(this)).closest('td').find('span').html(VideoId);
+                  //      }
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__LanguageId") {
+                  //          debugger;
+                  //          $(this).val(LanguageId);
+                  //          $($(this)).closest('td').find('span').html(LanguageName);
+                  //      }
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoName") {
+                  //          debugger;
+                  //          $(this).val(VideoName);
+                  //          $($(this)).closest('td').find('span').html(VideoName);
+                  //      }
+
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__ActiveFlag") {
+                  //          debugger;
+                  //          $(this).val("A");
+                  //      }
+
+
+
+                  //      $(this).attr('id', id);
+
+
+
+                  //  });
+
+                  //  var Sno = 0;
+                  //  $.each(template1.find('td'), function () {
+                  //      debugger;
+                  //      if (Sno == 0) {
+                  //          //$(this)[0].outerText = count + 1;
+                  //          var tdvalue = count1 + 1;
+                  //          $(this).html(tdvalue);
+                  //      }
+                  //      Sno = Sno + 1;
+
+
+                  //  });
+
+
+
+
+
+
+                  //  debugger;
+                  //  $(tabname1).append(template1);
+                  //  //template.removeClass(tabname +' contacts-record-template')
+                  //  template1.removeClass('#dt-diytemplate .contacts-record-template')
+                  //      .addClass(tabname1 + ' contacts-record').show();
+
+
+                  //  dt1.row.add(tabname1);
+                  //  dt1.draw();
+
+
+
+
+
+
+
+
+
+                  //  tabname = '#dt-diy';
+                  //  tabclass = 'tractorConfiguration.dIYVideoMappingList';
+
+
+
+                  //  var count = $(tabname + " tr.contacts-record").length;
+
+
+                  //  var template = $('#dt-diytemplate .contacts-record-template').clone();
+
+
+                  //  $.each(template.find('input[type=text]'), function () {
+                  //      debugger;
+                  //      var name = $(this).attr('name');
+                  //      name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+                  //      $(this).attr('name', name);
+                  //  });
+                  //  $.each(template.find('td i'), function () {
+                  //      debugger;
+
+                  //      $(this)[0].id = count;
+                  //  });
+                  //  $.each(template.find('select,input'), function () {
+                  //      debugger;
+                  //      var name = $(this).attr('name');
+
+                  //      name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+                  //      id = $(this).attr('id');
+                  //      id = id.replace("tractorConfiguration_dIYVideoMappingTemplate_0__", "tractorConfiguration_dIYVideoMappingList_" + count + "__");
+                  //      $(this).attr('name', name);
+
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoId") {
+                  //          debugger;
+                  //          $(this).val(VideoId);
+                  //          $($(this)).closest('td').find('span').html(VideoId);
+                  //      }
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__LanguageId") {
+                  //          debugger;
+                  //          $(this).val(LanguageId);
+                  //          $($(this)).closest('td').find('span').html(LanguageName);
+                  //      }
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoName") {
+                  //          debugger;
+                  //          $(this).val(VideoName);
+                  //          $($(this)).closest('td').find('span').html(VideoName);
+                  //      }
+
+                  //      if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__ActiveFlag") {
+                  //          debugger;
+                  //          $(this).val("A");
+                  //      }
+
+
+
+                  //      $(this).attr('id', id);
+
+
+
+                  //  });
+
+                  //  var Sno = 0;
+                  //  $.each(template.find('td'), function () {
+                  //      debugger;
+                  //      if (Sno == 0) {
+                  //      //$(this)[0].outerText = count + 1;
+                  //      var tdvalue = count + 1;
+                  //      $(this).html(tdvalue);
+                  //      }
+                  //      Sno = Sno + 1;
+
+
+                  //  });
+
+
+
+
+
+
+
+                  //  $(tabname).append(template);
+                  //  //template.removeClass(tabname +' contacts-record-template')
+                  //  template.removeClass('#dt-diytemplate .contacts-record-template')
+                  //      .addClass(tabname + ' contacts-record').show();
+
+                  //  debugger;
+                  //  dt.row.add(template);
+                  //  dt.draw();
+
+
+                  //  debugger;
+
+
+
+
+                    $(this)[0].disabled = true;
+                }
+            });
+        });
+
+
+
+
+        $("#dt-diy").on("click", "#DeleteRow", function () {
+            debugger;
+            //$(this).closest("tr").hide();
+            $($(this).closest("tr")).remove();
+            dt.rows($(this).closest("tr")).remove().draw();
+
+            $($(this)).closest('td').find('input').val("I");
+            var id ='#'+ $($(this)).closest('td').find('input')[0].id;
+            id = id.replace("_dIYVideoMappingList_", "_dIYVideoMappingListOrg_");
+            $(id).val("I");
+        });
+
+
+        $('#btnAddDIYVideo').click(function () {
+            //debugger;
+            //var checkboxid = $('#chkbox');
+            //var checkboxes = $(checkboxid).find("input:checkbox");
+
+            //checkboxes.each(function () {
+            //    $(this)[0].disabled = true;
+            //    $(this)[0].checked = false;
+            //});
+            //RemoveTableRows();
+        });
+
+        $('#btnclose').click(function () {
+            debugger;
+            RemoveTableRows();
+        });
+
+        $('#btnCancel').click(function () {
+            debugger;
+            RemoveTableRows();
+        });
+
+        $('#BtnUpd').click(function () {
+
+            var validateinput = true;
+
+
+            if (ValidateVideo('#tractorConfiguration_dIYVideo_VideoName') == false) {
+                validateinput = false;
+            }
+            if (ValidateVideo('#tractorConfiguration_dIYVideo_VideoDescription') == false) {
+                validateinput = false;
+            }
+            if (ValidateVideo('#CategoryList') == false) {
+                validateinput = false;
+            }
+            if (ValidateVideo('#tractorConfiguration_dIYVideo_VideoFile') == false) {
+                validateinput = false;
+            }
+
+            //debugger;
+            if (validateinput == true) {
+                SaveDiyVideo();
+            }
+
+        });
+
+
+
+       function ValidateVideo(Id)
+        {
+           var input = $(Id);
+
+            //debugger;
+
+            if (input.val() === '' || input.val()==0) {
+                input.removeClass('is-valid');
+                input.addClass('is-invalid');
+                return false;
+            }
+            else {
+                input.removeClass('is-invalid');
+                input.addClass('is-valid');
+                return true;
+            }
+
+
+
+            //}
+        }
+        $('#ModelCategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+        $('#Languagelist').multiselect({
+            buttonWidth: '100%'
+        });
+
+        $('#SearchLanguagelist').multiselect({
+            buttonWidth: '100%'
+        });
+        //Applicable Languages List
+        $('#AppLanguageListBrochure').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                debugger;
+
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+        //Applicable Languages List
+        $('#AppLanguageList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        $('#DIYVideosList').multiselect({
+            buttonWidth: '100%'
+        });
+
+        //$('#DIYVideosList').multiselect({
+        //    buttonWidth: '100%',
+        //    enableClickableOptGroups: true,
+        //    includeSelectAllOption: true,
+        //    float: 'left',
+        //    //enableFiltering: true
+        //    buttonText: function (options, select) {
+        //        //debugger;
+
+        //        if (options.length === 0) {
+        //            return 'No Videos selected';
+        //        }
+        //        else if (options.length > 3) {
+        //            return 'More than 3 Videos selected!';
+        //        }
+        //        else {
+        //            var labels = [];
+        //            options.each(function () {
+        //                if ($(this).attr('label') !== undefined) {
+        //                    labels.push($(this).attr('label'));
+        //                }
+        //                else {
+        //                    labels.push($(this).html());
+        //                }
+        //            });
+        //            return labels.join(', ') + '';
+        //        }
+        //    }
+        //});
+
+        $('#DIYLangageList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+
+        $('#CategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+        $('#modelimg').on('click', '.badge', function (event) {
+            //debugger;
+            //$(this).hide();
+            var Img = event.target;
+            //var ImgParent = Img.parentElement.parentElement.parentElement;
+            var ImgParent1 = Img.parentElement.parentElement.parentElement;
+            console.log(Img);
+            var parentid = '#' + Img.parentNode.parentElement.parentElement.parentElement.id;
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    debugger;
+                    if (result.value == true) {
+                        $(ImgParent1.parentElement).hide()
+                        //$(ImgParent1).attr("style", "display:none")
+                        //ImgParent1.hidden = true;
+                        //ImgParent1.hide();
+                        //$(ImgParent1).hide()
+                        //$.each($(this).find('img'), function () {
+                        //    //debugger;
+
+                        //    var
+                        //    $(this)[0].id = "imgmodel" + imgcount;
+                        //    $(this)[0].src = result.toDataURL(uploadedImageType);
+                        //});
+                      //  $.each(parentid.find('select,input'), function () {
+                      //      //debugger;
+
+                      //      var name = $(this).attr('name');
+
+                      //      if (name.indexOf('.ImageURL') !== -1)
+                      //      //if (name == 'tractorConfiguration.ModelImagesTemplate[0].ImageURL') {
+                      //      {
+                      //          $(this).val('');
+                      //      }
+
+
+                      //if (name.indexOf('.ActiveFlag') !== -1) {
+                      //  $(this).val('I');
+                      // }
+
+
+
+
+
+
+                      //  });
+                        ImgParent1.children[2].value = '';
+                        ImgParent1.children[3].value = 'I';
+
+                        //$("#imgmodelrow1").hide();
+                        //$("#tractorConfiguration_ModelImage1")[0].value = "";
+                        //$("#lblModelImage").html("Choose Images");
+                        //$("#tractorConfiguration_ModelImage1Updated").val(1);
+                        //$('#tractorConfiguration_Model1ImagePath').val('');
+                        //EnableImageUpload();
+                        //alert("modelimageclose1");
+                    }
+
+                });
+
+
+        });
+        //$('.modelimageclose1').on('click.modelimageclose1', function () {
+        //    Swal.fire(
+        //        {
+        //            title: "Do you want to Delete the Image?",
+        //            //text: "You won't be able to revert this!",
+        //            //type: "warning",
+        //            showCancelButton: true,
+        //            confirmButtonText: "Yes!"
+        //        }).then(function (result) {
+        //            //debugger;
+        //            if (result.value == true) {
+        //                $("#imgmodelrow1").hide();
+        //                $("#tractorConfiguration_ModelImage1")[0].value = "";
+        //                $("#lblModelImage").html("Choose Images");
+        //                $("#tractorConfiguration_ModelImage1Updated").val(1);
+        //                $('#tractorConfiguration_Model1ImagePath').val('');
+        //                EnableImageUpload();
+        //    //alert("modelimageclose1");
+        //            }
+
+        //        });
+
+
+        //});
+
+
+        var table = $('#dt-diy').DataTable({
+            responsive: true,
+            dom:
+                /*	--- Layout Structure
+                    --- Options
+                    l	-	length changing input control
+                    f	-	filtering input
+                    t	-	The table!
+                    i	-	Table information summary
+                    p	-	pagination control
+                    r	-	processing display element
+                    B	-	buttons
+                    R	-	ColReorder
+                    S	-	Select
+
+                    --- Markup
+                    < and >				- div element
+                    <"class" and >		- div with a class
+                    <"#id" and >		- div with an ID
+                    <"#id.class" and >	- div with an ID and a class
+
+                    --- Further reading
+                    https://datatables.net/reference/option/dom
+                    --------------------------------------
+                 */
+                "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            buttons: [
+                {
+                    //extend: 'colvis',
+                    //text: 'Column Visibility',
+                    //titleAttr: 'Col visibility',
+                    //className: 'btn-outline-default'
+                }
+
+            ]
+            //columnDefs: [
+            //    {
+            //        targets: 0,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 1,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 2,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 6,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 7,
+            //        className: 'text-center'
+            //    }
+            //]
+        });
+
+        var table1 = $('#dt-diyorg1').DataTable({
+            responsive: true,
+            dom:
+                /*	--- Layout Structure
+                    --- Options
+                    l	-	length changing input control
+                    f	-	filtering input
+                    t	-	The table!
+                    i	-	Table information summary
+                    p	-	pagination control
+                    r	-	processing display element
+                    B	-	buttons
+                    R	-	ColReorder
+                    S	-	Select
+
+                    --- Markup
+                    < and >				- div element
+                    <"class" and >		- div with a class
+                    <"#id" and >		- div with an ID
+                    <"#id.class" and >	- div with an ID and a class
+
+                    --- Further reading
+                    https://datatables.net/reference/option/dom
+                    --------------------------------------
+                 */
+                "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            buttons: [
+                {
+                    //extend: 'colvis',
+                    //text: 'Column Visibility',
+                    //titleAttr: 'Col visibility',
+                    //className: 'btn-outline-default'
+                }
+
+            ]
+            //columnDefs: [
+            //    {
+            //        targets: 0,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 1,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 2,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 6,
+            //        className: 'text-center'
+            //    },
+            //    {
+            //        targets: 7,
+            //        className: 'text-center'
+            //    }
+            //]
+        });
+
+        dt = $('#dt-diy').dataTable().api();
+        dt1 = $('#dt-diyorg1').dataTable().api();
+        $(".multiselectcheckbox").multiselectcheck();
+
+
+        $('.modelimageclose2').on('click.modelimageclose2', function () {
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    ////debugger;
+                    if (result.value == true) {
+                        $("#imgmodelrow2").hide();
+                        $("#tractorConfiguration_ModelImage2")[0].value = "";
+                        $("#lblModelImage").html("Choose Images");
+                        $("#tractorConfiguration_ModelImage2Updated").val(1);
+                        $('#tractorConfiguration_Model2ImagePath').val('');
+                        //alert("modelimageclose1");
+                        EnableImageUpload();
+                    }
+
+                });
+
+
+        });
+        $('.modelimageclose3').on('click.modelimageclose3', function () {
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    ////debugger;
+                    if (result.value == true) {
+                        $("#imgmodelrow3").hide();
+                        $("#tractorConfiguration_ModelImage3")[0].value = "";
+                        $("#lblModelImage").html("Choose Images");
+                        $("#tractorConfiguration_ModelImage3Updated").val(1);
+                        $('#tractorConfiguration_Model3ImagePath').val('');
+                        //alert("modelimageclose1");
+                        EnableImageUpload();
+                    }
+
+                });
+
+
+        });
+
+        $('.thumpimageclose1').on('click.thumpimageclose', function () {
+            debugger;
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Image?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    ////debugger;
+                    if (result.value == true) {
+
+                        $("#imgthumprow").hide();
+                        $("#tractorConfiguration_ThumpImage")[0].value = "";
+                        $("#lblthumimg").html("Choose Images");
+                        $("#tractorConfiguration_ThumpImageUpdated").val(1);
+            //alert("thumpimageclose1");
+                    }
+
+                });
+
+        });
+
+        $("#openSWAL").click(function () {
+            swal({
+                title: "An input!",
+                text: "Write something interesting:",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "Write something"
+            },
+                function (inputValue) {
+                    if (inputValue === false) return false;
+
+                    if (inputValue === "") {
+                        swal.showInputError("You need to write something!");
+                        return false
+                    }
+
+                    swal("Nice!", "You wrote: " + inputValue, "success");
+                });
+        });
+
+        //document.querySelector(".UserManualclose1").addEventListener("click", function () {
+
+        $('.UserManualclose1').on('click.UserManualclose', function () {
+
+            debugger;
+            //$.fn.modal.Constructor.prototype.enforceFocus = function () { };
+            jQuery(document).off('focusin.modal');
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the User's Manual?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    target: document.getElementById('form-modal'),
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    //debugger;
+                    if (result.value == true) {
+
+                        $("#imguserManaul").hide();
+                        $("#tractorConfiguration_UserManual")[0].value = "";
+                        $("#usermanualfile").html("Choose User's Manual");
+                        $("#tractorConfiguration_UserManaulUpdated").val(1);
+                        //alert("thumpimageclose1");
+                    }
+
+                });
+
+        });
+
+
+        $('._360close1').on('click._360close', function () {
+
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the 360° .Zip?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    ////debugger;
+                    if (result.value == true) {
+
+                        $("#img360").hide();
+                        $("#tractorConfiguration_Tractor360View")[0].value = "";
+                        $("#lbl360").html("Choose 360° .Zip");
+                        $("#tractorConfiguration__360Updated").val(1);
+                        //alert("thumpimageclose1");
+                    }
+
+                });
+
+        });
+
+
+        $('.Brochureclose1').on('click.Brochureclose', function () {
+
+
+            Swal.fire(
+                {
+                    title: "Do you want to Delete the Brochure?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    ////debugger;
+                    if (result.value == true) {
+
+                        $("#imgBrochure").hide();
+                        $("#tractorConfiguration_Brochure")[0].value = "";
+                        $("#lblBrochure").html("Choose Brochure");
+                        $("#tractorConfiguration_BrochureUpdated").val(1);
+                        //alert("thumpimageclose1");
+                    }
+
+                });
+
+        });
+
+        //debugger;
+        var modelimage1 = '@Model.tractorConfiguration.Model1ImagePath';
+        var modelimage2 = '@Model.tractorConfiguration.Model2ImagePath';
+        var modelimage3 = '@Model.tractorConfiguration.Model3ImagePath';
+        var Thumpimage = '@Model.tractorConfiguration.ThumpImagePath';
+        var Brochure = '@Model.tractorConfiguration.BrochureURLPath';
+        var _360 = '@Model.tractorConfiguration.Tractor360ViewURLPath';
+        var UserManaul ='@Model.tractorConfiguration.UserManaulURLPath';
+
+
+
+
+        if (modelimage1 == '') {
+            $("#imgmodelrow1").hide();
+        }
+        else {
+            $("#imgmodel1").attr('src', modelimage1);
+            $("#imgmodelrow1").show();
+        }
+
+
+        if (modelimage2 == '') {
+            $("#imgmodelrow2").hide();
+        }
+        else {
+            $("#imgmodel2").attr('src', modelimage2);
+            $("#imgmodelrow2").show();
+        }
+
+
+        if (modelimage3 == '') {
+            $("#imgmodelrow3").hide();
+        }
+        else {
+            $("#imgmodel3").attr('src', modelimage3);
+            $("#imgmodelrow3").show();
+        }
+
+        if (Thumpimage == '') {
+            $("#imgthumprow").hide();
+        }
+        else {
+            $("#imgthump").attr('src', Thumpimage);
+            $("#imgthumprow").show();
+        }
+
+        if (_360 == '') {
+            $("#img360").hide();
+        }
+        else {
+            $("#img360").show();
+        }
+
+        if (Brochure == '') {
+            $("#imgBrochure").hide();
+        }
+        else {
+            $("#imgBrochure").show();
+        }
+
+        if (UserManaul == '') {
+            $("#imguserManaul").hide();
+        }
+        else {
+            $("#imguserManaul").show();
+        }
+
+        //EnableImageUpload();
+    });
+
+
+    window.reset = function (e) {
+        e.wrap('<form>').closest('form').get(0).reset();
+        e.unwrap();
+    }
+    function resetFile(id) {
+        //debugger;
+        const file = document.querySelector('.custom-file-input');
+        file.value = '';
+        //$(id).val('');
+    }
+
+    function clearInput(id) {
+        //debugger;
+        var input = $(id);
+        input = input.val('').clone(true);
+    };
+
+
+    function EnableImageUpload() {
+        var modelimage1 = $('#tractorConfiguration_Model1ImagePath').val();
+        var modelimage2 = $('#tractorConfiguration_Model2ImagePath').val();
+        var modelimage3 = $('#tractorConfiguration_Model3ImagePath').val();
+
+        $('#Modelimage1').hide();
+        $('#Modelimage2').hide();
+        $('#Modelimage3').hide();
+        if (modelimage1 == '') {
+            $('#Modelimage1').show();
+        }
+        else if (modelimage2 == '') {
+            $('#Modelimage2').show();
+        }
+        else if (modelimage3 == '') {
+            $('#Modelimage3').show();
+        }
+        else {
+            $('#Modelimage1').show();
+        }
+    }
+    function ValidateImage(result, imageid, FileExtensions, FileSize, SpanId, imgwidth, imgheight,imgrowid,imgupd,imgpath) {
+        //debugger;
+        var extension = $(result).val().split('.').pop().toLowerCase();
+        var validFileExtensions = [FileExtensions];
+        if (($.inArray(extension, validFileExtensions) == -1) &&  (FileExtensions !="")) {
+            if (SpanId != "") {
+                $(SpanId).text("Upload only " + validFileExtensions + " file").show();
+            }
+
+            $(result).replaceWith($(result).val('').clone(true));
+        }
+        else {
+            if (Math.round($(result).get(0).files[0].size / 1024) > (FileSize)) {
+                if (SpanId != "") {
+                    $(SpanId).text("Max allowed file size is 2 MB").show();
+                }
+                $(result).replaceWith($(result).val('').clone(true));
+            }
+            else {
+                if (result.files && result.files[0]) {
+
+                    $('#tractorConfiguration_ModelImage2').files = result.files;
+                    var filereader = new FileReader();
+                    filereader.onload = function (e) {
+                        //$("#imgvehicle").attr('src', e.target.result);
+
+                        ////debugger;
+                        var img = new Image();
+                        img.src = e.target.result;
+
+                        img.onload = function () {
+                            ////debugger;
+                            var width = this.width;
+                            var height = this.height;
+
+                            if ((height == imgheight && width == imgwidth) || ((imgwidth == 0) && (imgheight == 0))) {
+                                if (SpanId != "") {
+                                    $(SpanId).text('').hide();
+                                }
+                                //debugger;
+                                $(imageid).attr('src', e.target.result);
+
+                                //$('#tractorConfiguration_ModelImage2').files[0] = e.target.result;
+
+                                $(imgpath).val(e.target.result);
+                                $(imgrowid).show();
+                                $(imgupd).val(1);
+
+                                EnableImageUpload();
+
+                            }
+                            else {
+                                if (SpanId != "") {
+                                    $(SpanId).text("Image width and height Should be " + imgwidth + " * " + imgheight).show();
+                                }
+                                $(result).replaceWith($(result).val('').clone(true));
+                            }
+
+                        }
+
+                    }
+                    filereader.readAsDataURL(result.files[0]);
+                }
+
+            }
+        }
+
+                                }
+
+
+
+
+    function SaveDiyVideo() {
+        var form = $('form').get(0);
+
+        var fd = new FormData(form);
+        fd.append("VideoName", $("#tractorConfiguration_dIYVideo_VideoName").val());
+        fd.append("VideoDescription", $("#tractorConfiguration_dIYVideo_VideoDescription").val());
+        fd.append("SelectedVideoCategory", $("#CategoryList").val());
+        fd.append("VideoFile", $("#tractorConfiguration_dIYVideo_VideoFile").get(0).files[0]);
+
+        $.ajax({
+            async: false,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: fd,
+            success: function (data) {
+                //debugger;
+                if (data.success = true) {
+                    $('#tractorConfiguration_dIYVideo_VideoId').val(data.message);
+                    CloseModalPopup();
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function CloseModalPopup() {
+
+        $("#default-example-modal-center").modal('hide');
+    }
+
+    function LoadIconImage(ImgRowId, result, UpdId, FileExtensions) {
+
+        //debugger;
+
+        var input = $(result);
+        if (result[0].value == '') {
+            $(ImgRowId).hide();
+        }
+        else {
+
+            var extension = $(result).val().split('.').pop().toLowerCase();
+            var validFileExtensions = [FileExtensions];
+            if (($.inArray(extension, validFileExtensions) == -1) && (FileExtensions != "")) {
+
+               /// $(SpanId).text("Upload only " + validFileExtensions + " file").show();
+                $(ImgRowId).hide();
+                input.removeClass('is-valid');
+                input.addClass('is-invalid');
+                $(result).replaceWith($(result).val('').clone(true));
+                result[0].value = '';
+            }
+            else {
+                $(ImgRowId).show();
+                $(UpdId).val(1);
+                result.removeClass('is-invalid');
+                result.addClass('is-valid');
+                return true;
+            }
+
+
+        }
+
+    }
+    function Cleardata() {
+
+        debugger;
+        $('#imgvalidation').hide();
+
+        $('.cropper-view-box').each(function () {
+            $(this).hide();
+        });
+
+        $('.cropper-canvas').each(function () {
+            $(this).hide();
+        });
+        $('.preview-lg').each(function () {
+            //debugger;
+            //alert('test');
+            $(this).hide();
+        });
+        $('#btnOk').attr('disabled','disabled');
+    }
+    function GetLanguages4Video(VideoId) {
+
+        var ModelCode = $('#tractorConfiguration_Modelcode').val();
+        var checkboxid = $('#chkbox');
+        var checkboxes = $(checkboxid).find("input:checkbox");
+
+        //$("select[id^='DIYLangageList']").children('option').each(function () {
+        //    $("#DIYLangageList option[value='" + $(this).val() + "']").prop("disabled", true);
+        //    $("#DIYLangageList").multiselect('refresh');
+        //});
+        checkboxes.each(function () {
+            $(this)[0].disabled = true;
+        });
+        debugger;
+             $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8',
+                 data: { VideoId: VideoId },
+                url: '@Url.Action("GetLanguages4Video", "Tractors")',
+                success: function (data)
+                {
+                    debugger;
+                    $(data).each(function (index,video) {
+                        debugger;
+                        //video.LanguageId
+                        //$("#DIYLangageList option[value='" + video.LanguageId + "']").prop("disabled", false);
+                        //$("#DIYLangageList").multiselect('refresh');
+
+                        checkboxes.each(function () {
+                            if ($(this).val() == video.LanguageId) {
+                                $(this)[0].disabled = false;
+                            }
+                        });
+                    });
+                    LoadDIYMappingList(ModelCode,VideoId);
+                },
+                error: function (err) {
+                    //debugger;
+                    //alert(err);
+                    console.log(err);
+                }
+        });
+
+
+    }
+
+
+    function LoadDIYMappingList(ModelCode, VideoId) {
+        debugger;
+
+        var ModelCode = $('#tractorConfiguration_Modelcode').val();
+        var checkboxid = $('#chkbox');
+        var checkboxes = $(checkboxid).find("input:checkbox");
+
+        checkboxes.each(function () {
+            debugger;
+            $(this)[0].checked = false;
+        });
+        //$("#dt-diy tr").each(function (index, table) {
+        //    if (index > 0) {
+        //        debugger;
+        //        $(table).remove();
+        //        dt.rows($(this)).remove().draw();
+        //    }
+        //});
+
+         $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8',
+                data: { ModelCode: ModelCode, VideoId: VideoId},
+                url: '@Url.Action("GetDIYVideoMapping", "Tractors")',
+                success: function (data)
+                {
+                    debugger;
+                    $(data).each(function (index,video) {
+                        debugger;
+
+                        checkboxes.each(function () {
+                            debugger;
+                            if ($(this).val() == video.LanguageId) {
+                                debugger;
+                                $(this)[0].disabled = true;
+                                $(this)[0].checked = true;
+                            }
+                        });
+
+                        //var VideoId = video.VideoId;
+                        //var VideoName = video.VideoName;
+                        //var LanguageId = video.LanguageId;
+                        //var LanguageName = video.LanguageName;
+                        //debugger;
+                        //tabname = '#dt-diy';
+                        //tabclass = 'tractorConfiguration.dIYVideoMappingList';
+
+
+
+                        //var count = $(tabname + " tr.contacts-record").length;
+
+
+                        //var template = $('#dt-diytemplate .contacts-record-template').clone();
+
+
+                        //$.each(template.find('input[type=text]'), function () {
+                        //    debugger;
+                        //    var name = $(this).attr('name');
+                        //    name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+                        //    $(this).attr('name', name);
+                        //});
+                        //$.each(template.find('td i'), function () {
+                        //    debugger;
+
+                        //    $(this)[0].id = count;
+                        //});
+                        //$.each(template.find('select,input'), function () {
+                        //    debugger;
+                        //    var name = $(this).attr('name');
+
+                        //    name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+                        //    id = $(this).attr('id');
+                        //    id = id.replace("newDIYTemplate_0__", "newDIY_" + count + "__");
+                        //    $(this).attr('name', name);
+
+                        //    if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoId") {
+                        //        debugger;
+                        //        $(this).val(VideoId);
+                        //        $($(this)).closest('td').find('span').html(VideoId);
+                        //    }
+                        //    if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__LanguageId") {
+                        //        debugger;
+                        //        $(this).val(LanguageId);
+                        //        $($(this)).closest('td').find('span').html(LanguageName);
+                        //    }
+                        //    if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoName") {
+                        //        debugger;
+                        //        $(this).val(VideoName);
+                        //        $($(this)).closest('td').find('span').html(VideoName);
+                        //    }
+
+                        //    if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__ActiveFlag") {
+                        //        debugger;
+                        //        $(this).val("A");
+                        //    }
+
+
+                        //    $(this).attr('id', id);
+
+
+
+                        //});
+
+
+                        //var Sno = 0;
+                        //$.each(template.find('td'), function () {
+                        //    debugger;
+                        //    if (Sno == 0) {
+                        //        //$(this)[0].outerText = count + 1;
+                        //        var tdvalue = count + 1;
+                        //        $(this).html(tdvalue);
+                        //    }
+                        //    Sno = Sno + 1;
+
+                        //});
+
+
+
+
+                        //$(tabname).append(template);
+                        //template.removeClass('#dt-diytemplate .contacts-record-template')
+                        //    .addClass(tabname + ' contacts-record').show();
+
+                        //debugger;
+                        //dt.row.add(template);
+                        //dt.draw();
+
+                    });
+
+                },
+                error: function (err) {
+                    //debugger;
+                    //alert(err);
+                    console.log(err);
+                }
+            });
+    }
+
+    function RemoveTableRows() {
+        debugger;
+        $("#dt-diy tr").each(function (index, table) {
+            if (index > 0) {
+                debugger;
+                $(table).remove();
+                dt.rows($(this)).remove().draw();
+            }
+        });
+        $("#dt-diyOrg tr").each(function (index, table) {
+            if (index > 0) {
+                debugger;
+                $(table).remove();
+                dt.rows($(this)).remove().draw();
+            }
+        });
+    }
+
+    function AddDIYVideo() {
+
+        var ModelCode = $('#tractorConfiguration_Modelcode').val();
+        var checkboxid = $('#chkbox');
+        var checkboxes = $(checkboxid).find("input:checkbox");
+
+        checkboxes.each(function () {
+            $(this)[0].disabled = true;
+            $(this)[0].checked = false;
+        });
+        RemoveTableRows();
+    }
+      function VideoLists(CategoryId) {
+
+          debugger;
+
+          var ModelCode = $('#tractorConfiguration_Modelcode').val();
+          var checkboxid = $('#chkbox');
+          var checkboxes = $(checkboxid).find("input:checkbox");
+
+          checkboxes.each(function () {
+              $(this)[0].disabled = true;
+              $(this)[0].checked = false;
+          });
+
+          //$("#DIYVideosList").remove();
+           $('#DIYVideosList option').remove();
+          //$('#DIYVideosList option').each(function () {
+          //$("#DIYLangageList]").children('option').each(function () {
+          //    debugger;
+          //    if ($(this).val() != '0') {
+          //        debugger;
+          //        $(this).remove();
+          //    }
+          //});
+          $("#DIYVideosList").append('<option value="0">Select Video</option>');
+          $('#DIYVideosList').multiselect('rebuild');
+            $.ajax({
+                type: 'GET',
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8',
+                data: { CategoryId: CategoryId },
+                url: '@Url.Action("GetVideoList", "Tractors")',
+                success: function (data) {
+                    debugger;
+
+                    $.each(data, function (i, state) {
+                        debugger;
+                        $("#DIYVideosList").append('<option value="' + state.DIY_ID + '">' + state.DIY_NAME + '</option>');
+
+                    });
+                    debugger;
+                    //$("#DIYVideosList").multiselect('refresh');
+                    //$('#DIYVideosList').multiselect({
+                    //    buttonWidth: '100%'
+                    //});
+
+                    $('#DIYVideosList').multiselect('rebuild');
+                },
+                error: function (ex) {
+                    console.log('Failed to retrieve VideoList.' + ex);
+                }
+            });
+    }
+
+    jQuery.fn.multiselectcheck = function () {
+        $(this).each(function () {
+            var checkboxes = $(this).find("input:checkbox");
+            checkboxes.each(function () {
+                var checkbox = $(this);
+                // Highlight pre-selected checkboxes
+                if (checkbox.prop("checked"))
+                    checkbox.parent().addClass("multiselect-on");
+
+                // Highlight checkboxes that the user selects
+                checkbox.click(function () {
+                    if (checkbox.prop("checked"))
+                        checkbox.parent().addClass("multiselect-on");
+                    else
+                        checkbox.parent().removeClass("multiselect-on");
+                });
+            });
+        });
+    };
+
+    function AddTableRow(tabname, tabclass, dt, LanguageId, LanguageName) {
+        //tabname = '#dt-diy';
+        //tabclass = 'tractorConfiguration.dIYVideoMappingList';
+
+        var VideoId = $('#DIYVideosList').val();
+        //var VideoName = $('#DIYVideosList option:selected').text();
+        var VideoName = $('#DIYVideosList option:selected').text().split("-")[1].trim()
+
+
+        var count = $(tabname + " tr.contacts-record").length;
+
+
+        var template = $('#dt-diytemplate .contacts-record-template').clone();
+
+
+        $.each(template.find('input[type=text]'), function () {
+            debugger;
+            var name = $(this).attr('name');
+            name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+            $(this).attr('name', name);
+        });
+        $.each(template.find('td i'), function () {
+            debugger;
+
+            $(this)[0].id = count;
+        });
+        $.each(template.find('select,input'), function () {
+            debugger;
+            var name = $(this).attr('name');
+
+            name = name.replace('tractorConfiguration.dIYVideoMappingTemplate[0]', tabclass + '[' + count + ']');
+            id = $(this).attr('id');
+            id = id.replace("tractorConfiguration_dIYVideoMappingTemplate_0__", "tractorConfiguration_dIYVideoMappingList_" + count + "__");
+            $(this).attr('name', name);
+
+            if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoId") {
+                debugger;
+                $(this).val(VideoId);
+                $($(this)).closest('td').find('span').html(VideoId);
+            }
+            if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__LanguageId") {
+                debugger;
+                $(this).val(LanguageId);
+                $($(this)).closest('td').find('span').html(LanguageName);
+            }
+            if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__VideoName") {
+                debugger;
+                $(this).val(VideoName);
+                $($(this)).closest('td').find('span').html(VideoName);
+            }
+
+            if ($(this)[0].id == "tractorConfiguration_dIYVideoMappingTemplate_0__ActiveFlag") {
+                debugger;
+                $(this).val("A");
+            }
+
+
+
+            $(this).attr('id', id);
+
+
+
+        });
+
+        var Sno = 0;
+        $.each(template.find('td'), function () {
+            debugger;
+            if (Sno == 0) {
+                //$(this)[0].outerText = count + 1;
+                var tdvalue = count + 1;
+                $(this).html(tdvalue);
+            }
+            Sno = Sno + 1;
+
+
+        });
+
+
+
+
+
+
+
+        $(tabname).append(template);
+        //template.removeClass(tabname +' contacts-record-template')
+        template.removeClass('#dt-diytemplate .contacts-record-template')
+            .addClass(tabname + ' contacts-record').show();
+
+        debugger;
+        dt.row.add(template);
+        dt.draw();
+
+    }
+</script>

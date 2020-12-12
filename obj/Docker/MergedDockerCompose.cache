@@ -1,0 +1,30 @@
+services:
+  profile.webapi:
+    build:
+      context: F:\Repos\2020-2021\Mahindra\2511_DigisenseMicroServices
+      dockerfile: Profile.WebAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: profilewebapi
+    ports:
+    - target: 80
+    - target: 443
+    volumes:
+    - C:\Users\udhayakumar\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\udhayakumar\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+  unifiedlogin.webapi:
+    build:
+      context: F:\Repos\2020-2021\Mahindra\2511_DigisenseMicroServices
+      dockerfile: UnifiedLogin.WebAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: unifiedloginwebapi
+    ports:
+    - target: 80
+    - target: 443
+    volumes:
+    - C:\Users\udhayakumar\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\udhayakumar\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+version: '3.4'

@@ -1,0 +1,348 @@
+﻿@model AdminPortal.Mvc.Models.Tractors.TractorsMaster
+
+@{
+    ViewBag.Title = "Implements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+<script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/Custom/CustomStyle.css" />
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-car-mechanic mr-1 fs-sm"></i>Manage Products</li>
+    <li class="breadcrumb-item"><i class="fal fa-tractor mr-1 fs-sm"></i>Tractors</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+<style>
+    .img-thumbnail {
+        height: 10rem !important;
+        width: 12rem !important;
+    }
+</style>
+
+
+<div class="subheader">
+    <div class="card col-12">
+        @using (Html.BeginForm("TractorSearch", "Tractors", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("TractorSearch", "Tractors", new { id = 0 }) }))//data-resetUrl
+        {
+            <div class="row border-primary mt-2 mb-4">
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    <h1 class="subheader-title mb-4">
+                        <i class="subheader-icon fal fa-shield-check"></i>
+                        Tractors
+                    </h1>
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    @Html.DropDownListFor(x => x.tractorModelSearch.SelectedModel, new MultiSelectList(Model.tractorModelSearch.TpdhModelList.Items, "MODELCODE_VC", "MODELNAME_VC", Model.tractorModelSearch.TpdhModelList), null, new { @class = "form-control mt-2 mb-2", id = "ModelList", name = "ModelList", multiple = "multiple" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    @Html.DropDownListFor(x => x.tractorModelSearch.SelectedBrand, new MultiSelectList(Model.tractorModelSearch.TpdhBrandList.Items, "BRANDCODE_VC", "BRANDNAME_VC", Model.tractorModelSearch.TpdhBrandList), null, new { @class = "form-control mt-2 mb-2", id = "BrandList", name = "BrandList", multiple = "multiple" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    @Html.DropDownListFor(x => x.tractorModelSearch.SelectedHP, new MultiSelectList(Model.tractorModelSearch.TpdhHPList.Items, "HPCODE_VC", "HPNAME_VC", Model.tractorModelSearch.TpdhHPList), null, new { @class = "form-control mt-2 mb-2", id = "HPList", name = "HPList", multiple = "multiple" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    @Html.DropDownListFor(x => x.tractorModelSearch.selectedLanguage, Model.tractorModelSearch.LanguageList, new { @class = "form-control mt-2 mb-2", id = "Languagelist", name = "Languagelist" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="TractorSearch" name="TractorSearch">Apply</button>
+                </div>
+            </div>
+
+        }
+
+
+        <div class="form-row ml-2 mt-4">
+            <div class="col-12">
+                <div class="form-row">
+                    @if (Model.TractorData.Count > 0)
+                    {
+                        foreach (var item in Model.TractorData)
+                        {
+                            <div class="col-xl-2 col-lg-3 col-sm-12 order-lg-1 order-xl-1 mr-5">
+                                <div class="card mb-g rounded-top">
+                                    <div class="row no-gutters row-grid">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+
+                                                <a href="@Url.Action("UpdateTractors", "Tractors",new { ModelId = @item.ModelCode,LanguageId=item.LanguageId } )">
+
+                                                    @if (item.ModelImage == "")
+                                                    {
+                                                        <img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@Url.Content(@item.ModelImage)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                                    }
+
+                                                </a>
+
+                                                <h5 class="mb-0 fw-700 text-center mt-3">
+
+                                                    @item.ModelName
+                                                    <small class="text-muted mb-0">@item.CategoryName</small>
+                                                </h5>
+                                            </div>
+                                            <div class="">
+
+
+                                                <div class="demo-h-spacing ml-2">
+
+
+                                                    @if (item.BrochureExists == true)
+                                                    {
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon rounded-circle position-relative js-waves-off mb-2" title="Brochure°">
+                                                            @*<i class="fal fa-download"></i>*@
+                                                            <img src="~/img/Artboard 32.svg">
+                                                            @*<span class="badge border border-success rounded-pill bg-primary-500 position-absolute pos-top pos-right"><i class="fal fa-check"></i></span>*@
+                                                        </a>
+                                                    }
+
+                                                    @if (item._360Exists == true)
+                                                    {
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon rounded-circle position-relative js-waves-off mb-2" title="360°">
+                                                            @*<i class="fal fa-download"></i>
+                                                                <span class="badge border border-success rounded-pill bg-primary-500 position-absolute pos-top pos-right"><i class="fal fa-check"></i></span>*@
+                                                            <img src="~/img/Artboard 33.svg">
+                                                        </a>
+                                                    }
+                                                    @if (item.DIYVideoExists == true)
+                                                    {
+                                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-success btn-icon rounded-circle position-relative js-waves-off mb-2" title="DIY°">
+                                                            @*<i class="fal fa-download"></i>
+                                                                <span class="badge border border-success rounded-pill bg-primary-500 position-absolute pos-top pos-right"><i class="fal fa-check"></i></span>*@
+                                                            <img src="~/img/Artboard 40.svg">
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+
+                        <div id="alertDiv" style="background-color: #ffd7ea !important;width:100%" class="alert alert-danger alert-dismissable">
+                            <a id="alertMessage" href="#" class="alert-link">No Records Found!.</a>.
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    //select-2 init
+    $('.select2').select2();
+    $("#flt-category").select2(
+        {
+            placeholder: "Filter by Category",
+        });
+
+    $('.select2-selection--multiple').each(function () {
+        $(this).addClass('btn-select');
+    });
+
+
+    $(document).ready(function () {
+
+
+        var ModelListArray = [];
+        varModelListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["ModelList"])) ;
+
+
+        $.each(varModelListIDArray, function () {
+                debugger;
+            ModelListArray.push(this);
+            });
+        $("#ModelList").val(ModelListArray);
+
+
+        var BrandListArray = [];
+        var BrandListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["BrandList"])) ;
+
+
+        $.each(BrandListIDArray, function () {
+                debugger;
+            BrandListArray.push(this);
+            });
+        $("#BrandList").val(BrandListArray);
+
+
+        var HPListArray = [];
+        var HPListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["HPList"])) ;
+
+
+        $.each(HPListIDArray, function () {
+                debugger;
+            HPListArray.push(this);
+            });
+        $("#HPList").val(HPListArray);
+
+        //activating menu li
+        $('#Tractor_Models').parent().parent().addClass('active open');
+        $('#Tractor_Models').addClass('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+        //$('#ModelList').multiselect({
+        //    buttonWidth: '100%'
+        //});
+        //$('#BrandList').multiselect({
+        //    buttonWidth: '100%'
+        //});
+        //$('#HPList').multiselect({
+        //    buttonWidth: '100%'
+        //});
+        $('#Languagelist').multiselect({
+            buttonWidth: '100%'
+        });
+
+
+        //Model List
+        $('#ModelList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                debugger;
+
+                if (options.length === 0) {
+                    return 'No Model selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Models selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        //Brand List
+        $('#BrandList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+
+                if (options.length === 0) {
+                    return 'No Brand selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Brands selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        //HP List
+        $('#HPList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                debugger;
+
+                if (options.length === 0) {
+                    return 'No HP selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 HP selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            debugger;
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            debugger;
+                            labels.push($(this).html().replace("&gt;", ">").replace("&lt;", "<"));
+                        }
+                    });
+
+                    //labels = labels.toString().replace("&lt", "<");
+                    //labels = labels.toString().replace("&gt", ">");
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+
+
+         var messageText =@Html.Raw(ViewBag.Status);
+
+        if (messageText == "Success") {
+
+            Swal.fire("Success!", "Tractors Updated Successfully", "success");
+            //bootbox.alert(
+            //    {
+            //        title: "<i class='fal fa-check-circle text-success mr-2'></i> <span class='text-success fw-500'>Success!</span>",
+            //        message: "<span><strong>Great...</strong> Tip of the day has been successfully added.</span>",
+            //        centerVertical: true,
+            //        className: "modal-alert",
+            //        closeButton: false
+            //    });
+        }
+        else if (messageText == "Failed") {
+            Swal.fire("Failed!", "Unable to Update Tractors", "failed");
+        }
+
+    });
+
+</script>
+
+

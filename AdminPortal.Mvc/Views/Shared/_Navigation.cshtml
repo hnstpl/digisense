@@ -1,0 +1,163 @@
+﻿@using AdminPortal.Mvc.Models.ViewModel
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var menuList = (List<MenuViewModel>)HttpContextAccessor.HttpContext.Session.GetObject<List<MenuViewModel>>("MenuMaster");
+}
+<div class="page-logo pl-3">
+    <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative">
+        <img src="~/img/Customer-Application---Smart-Object-Group.png" alt="Customer Application" aria-roledescription="logo" style="width:100%; height:100%;">
+    </a>
+</div>
+<!-- BEGIN PRIMARY NAVIGATION -->
+<nav id="js-primary-nav" class="primary-nav js-list-filter" role="navigation">
+    <div class="nav-filter">
+        <div class="position-relative">
+            <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+            <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+                <i class="fal fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+    <div class="info-card">
+        <div class="info-card-text ml-0">
+            <a href="#" class="d-flex align-items-center text-white">
+                <span class="text-truncate text-truncate-sm d-inline-block">
+                    @HttpContextAccessor.HttpContext.Session.GetString("User")
+                </span>
+            </a>
+            <span class="text-truncate text-truncate-md opacity-80">@HttpContextAccessor.HttpContext.Session.GetString("Role")</span>
+        </div>
+        <img src="~/img/Layer-41.png" class="cover" alt="cover">
+    </div>
+    <ul id="js-nav-menu" class="nav-menu">
+        @*if (HttpContextAccessor.HttpContext.Session.GetString("MenuMaster") != null)
+            {*@
+        <li id="dashboard">
+            <a href="home" title="Customer Application" data-filter-tags="customer application">
+                <i class="fal fa-chart-area"></i>
+                <span class="nav-link-text" data-i18n="nav.customerapplication">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-title mt-2">Customer Application</li>
+
+
+        @foreach (var itm in menuList)
+        {
+            <li>
+                <a href="#" title="Master" data-filter-tags="@itm.DisplayName">
+                    <i class="@itm.icon"></i>
+                    <span class="nav-link-text" data-i18n="nav.@itm.DisplayName.Replace(" ","_")">@itm.DisplayName</span>
+                </a>
+                @if (itm.SubMenu != null)
+                {
+                    <ul>
+                        @foreach (var subItm in itm.SubMenu)
+                        {
+                            if (subItm.ChildMenu.Count <= 0)
+                            {
+                                <li id="@subItm.DisplayName.Replace(" ", "_")">
+                                    <a href="@subItm.TargetLink" title="@subItm.DisplayName" data-filter-tags="@subItm.DisplayName">
+                                        <span class="nav-link-text" data-i18n="nav.@subItm.DisplayName.Replace(" ", "_")">@subItm.DisplayName</span>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li id="@subItm.DisplayName.Replace(" ", "_")">
+                                    <a href="javascript:void(0)" title="@subItm.DisplayName" data-filter-tags="@subItm.DisplayName">
+                                        <span class="nav-link-text" data-i18n="nav.@subItm.DisplayName.Replace(" ", "_")">@subItm.DisplayName</span>
+                                    </a>
+                                    <ul>
+                                        @foreach (var childItm in subItm.ChildMenu)
+                                        {
+                                            <li>
+                                                <a href="@childItm.TargetLink" title="@childItm.DisplayName" data-filter-tags="@childItm.DisplayName">
+                                                    <span class="nav-link-text" data-i18n="nav.@childItm.DisplayName.Replace(" ", "_")">@childItm.DisplayName</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+            </li>
+        }
+        @*}
+            else
+            {
+                //this.Context.Response.Redirect("Account/Login");
+                //Url.Action("Login", "Account");
+                //this.Response.Redirect("~/Account/Login");
+            }*@
+    </ul>
+    <div class="filter-message js-filter-message bg-success-600"></div>
+</nav>
+<!-- we use this only for CSS color refernce for JS stuff -->
+<p id="js-color-profile" class="d-none">
+    <span class="color-primary-50"></span>
+    <span class="color-primary-100"></span>
+    <span class="color-primary-200"></span>
+    <span class="color-primary-300"></span>
+    <span class="color-primary-400"></span>
+    <span class="color-primary-500"></span>
+    <span class="color-primary-600"></span>
+    <span class="color-primary-700"></span>
+    <span class="color-primary-800"></span>
+    <span class="color-primary-900"></span>
+    <span class="color-info-50"></span>
+    <span class="color-info-100"></span>
+    <span class="color-info-200"></span>
+    <span class="color-info-300"></span>
+    <span class="color-info-400"></span>
+    <span class="color-info-500"></span>
+    <span class="color-info-600"></span>
+    <span class="color-info-700"></span>
+    <span class="color-info-800"></span>
+    <span class="color-info-900"></span>
+    <span class="color-danger-50"></span>
+    <span class="color-danger-100"></span>
+    <span class="color-danger-200"></span>
+    <span class="color-danger-300"></span>
+    <span class="color-danger-400"></span>
+    <span class="color-danger-500"></span>
+    <span class="color-danger-600"></span>
+    <span class="color-danger-700"></span>
+    <span class="color-danger-800"></span>
+    <span class="color-danger-900"></span>
+    <span class="color-warning-50"></span>
+    <span class="color-warning-100"></span>
+    <span class="color-warning-200"></span>
+    <span class="color-warning-300"></span>
+    <span class="color-warning-400"></span>
+    <span class="color-warning-500"></span>
+    <span class="color-warning-600"></span>
+    <span class="color-warning-700"></span>
+    <span class="color-warning-800"></span>
+    <span class="color-warning-900"></span>
+    <span class="color-success-50"></span>
+    <span class="color-success-100"></span>
+    <span class="color-success-200"></span>
+    <span class="color-success-300"></span>
+    <span class="color-success-400"></span>
+    <span class="color-success-500"></span>
+    <span class="color-success-600"></span>
+    <span class="color-success-700"></span>
+    <span class="color-success-800"></span>
+    <span class="color-success-900"></span>
+    <span class="color-fusion-50"></span>
+    <span class="color-fusion-100"></span>
+    <span class="color-fusion-200"></span>
+    <span class="color-fusion-300"></span>
+    <span class="color-fusion-400"></span>
+    <span class="color-fusion-500"></span>
+    <span class="color-fusion-600"></span>
+    <span class="color-fusion-700"></span>
+    <span class="color-fusion-800"></span>
+    <span class="color-fusion-900"></span>
+</p>
+<!-- END Color profile -->

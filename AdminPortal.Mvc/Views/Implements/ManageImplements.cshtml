@@ -1,0 +1,223 @@
+﻿
+@model AdminPortal.Mvc.Models.Implements.ImplementMaster
+
+@{
+    ViewBag.Title = "Implements";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/bootstrap-multiselect.css" />
+<script src="~/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="~/css/CustomStyle.css" />
+<style>
+    .img-thumbnail {
+        height: 10rem !important;
+        width: 12rem !important;
+    }
+
+    .img-thumbnail-custom {
+        height: 10rem !important;
+        width: 12rem !important;
+    }
+</style>
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-car-mechanic mr-1 fs-sm"></i>Manage Products</li>
+    <li class="breadcrumb-item"><i class="fal fa-cog mr-1 fs-sm"></i>Implements</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+
+<div class="subheader">
+    <div class="card col-12">
+        @using (Html.BeginForm("ImplementSearch", "Implements", FormMethod.Post, new { enctype = "multipart/form-data", data_restUrl = Url.Action("Index", "Vehicle", new { id = 0 }) }))//data-resetUrl
+        {
+            <div class="row border-primary mt-2 mb-4">
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-6 mt-2 mb-2 ml-2">
+                    <h1 class="subheader-title mb-4">
+                        <i class="subheader-icon fal fa-shield-check"></i>
+                        Implements
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-2">
+                    @Html.DropDownListFor(x => x.implementModelSearch.SelectedCategory, new MultiSelectList(Model.implementModelSearch.ModelCategoryList.Items, "IGCode_VC", "IGName_VC", Model.implementModelSearch.ModelCategoryList), null, new { @class = "form-control mt-2 mb-2", id = "CategoryList", name = "CategoryList", multiple = "multiple" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2 ml-5">
+                    @Html.DropDownListFor(x => x.implementModelSearch.selectedLanguage, Model.implementModelSearch.LanguageList, "Select Language", new { @class = "form-control mt-2 mb-2", id = "Languagelist", name = "Languagelist" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="BannerSearch" name="BannerSearch">Apply</button>
+                </div>
+            </div>
+
+        }
+
+
+        <div class="form-row ml-2 mt-4">
+            <div class="col-12">
+
+                <div class="form-row">
+                    @if (Model.ImplementData.Count > 0)
+                    {
+                        foreach (var item in Model.ImplementData)
+                        {
+                            <div class="col-xl-2 col-lg-3 col-sm-12 order-lg-1 order-xl-1 mr-5">
+                                <div class="card mb-g rounded-top">
+                                    <div class="row no-gutters row-grid">
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column align-items-center justify-content-center p-4">
+
+                                                <a href="@Url.Action("UpdateImplementDetails", "Implements", new { ModelId = @item.ModelCode, LanguageId = item.LanguageId })">
+                                                    @if (item.ModelImage == "")
+                                                    {
+                                                        <img src="~/img/mahindra_tractor.png" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@Url.Content(@item.ModelImage)" class="rounded-circle shadow-2 img-thumbnail" alt="">
+                                                    }
+
+                                                </a>
+
+                                                <h5 class="mb-0 fw-700 text-center mt-3">
+
+                                                    @item.ModelName
+                                                    <small class="text-muted mb-0">@item.CategoryName</small>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+
+                        <div id="alertDiv" style="background-color: #ffd7ea !important;width:100%" class="alert alert-danger alert-dismissable">
+                            <a id="alertMessage" href="#" class="alert-link">No Records Found!.</a>.
+                        </div>
+
+                    }
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    //select-2 init
+    $('.select2').select2();
+    $("#flt-category").select2(
+        {
+            placeholder: "Filter by Category",
+        });
+
+    $('.select2-selection--multiple').each(function () {
+        $(this).addClass('btn-select');
+    });
+
+
+    $(document).ready(function () {
+        //activating menu li
+        $('#Implement_Models').parent().parent().addClass('active open');
+        $('#Implement_Models').addClass('active');
+        var AngleElm = $('.open .fa-angle-down');
+        AngleElm.removeClass('fa-angle-down');
+        AngleElm.addClass('fa-angle-up');
+
+
+
+          var ModelListArray = [];
+        varModelListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["SelectedCategory"])) ;
+
+
+        $.each(varModelListIDArray, function () {
+                debugger;
+            ModelListArray.push(this);
+            });
+        $("#CategoryList").val(ModelListArray);
+
+        //$('#CategoryList').multiselect({
+        //    buttonWidth: '100%'
+        //});
+
+        //Category List
+        $('#CategoryList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                //debugger;
+
+                if (options.length === 0) {
+                    return 'No Category selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Categories selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        $('#Languagelist').multiselect({
+            buttonWidth: '100%'
+        });
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+
+
+         var messageText =@Html.Raw(ViewBag.Status);
+
+        if (messageText == "Success") {
+
+            //Swal.fire("Success!", "Implements Updated Successfully", "success");
+            swal.fire({
+                title: 'Implements',
+                text: "Implements Updated Successfully",
+                type: 'success'
+            })
+            .then(function () {
+
+                window.location.href = "@Url.Action("ManageImplements", "Implements")"
+
+            })
+
+            //bootbox.alert(
+            //    {
+            //        title: "<i class='fal fa-check-circle text-success mr-2'></i> <span class='text-success fw-500'>Success!</span>",
+            //        message: "<span><strong>Great...</strong> Tip of the day has been successfully added.</span>",
+            //        centerVertical: true,
+            //        className: "modal-alert",
+            //        closeButton: false
+            //    });
+        }
+        else if (messageText == "Failed") {
+            Swal.fire("Failed!", "Unable to Update Implements", "failed");
+        }
+
+    });
+
+</script>
+
+

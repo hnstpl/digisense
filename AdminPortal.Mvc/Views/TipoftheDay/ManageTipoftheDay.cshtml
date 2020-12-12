@@ -1,0 +1,716 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@model AdminPortal.Mvc.Models.TipoftheDay.TipoftheDayModel
+
+@{
+    ViewBag.Title = "ManageTipoftheDay";
+    Layout = "_Layout";
+    var modelData = ViewBag.TipsList == null ? null : ViewBag.TipsList;
+}
+
+@*Multi Select*@
+<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="~/Custom/CustomStyle.css" />
+<script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-image mr-1 fs-sm"></i>Manage Banners</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-ballot-check mr-1 fs-sm"></i>Tip of the day</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+<style>
+    .select2-selection__arrow b {
+        display: none !important;
+    }
+</style>
+@using (Html.BeginForm("ManageTipoftheDay", "TipoftheDay", FormMethod.Post, new { @id = "form1", novalidate = "", @class = "needs-validation" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon  fal fa-ballot-check"></i>
+                        Tip of the day
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-12 col-xl-9">
+                    <div class="row mb-0">
+                        <div class="col-xl-3"></div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-12 col-xl-3 mb-0">
+                            <div class="controls mt-2">
+                                <div class="input-group filter">
+                                    @Html.TextBoxFor(x => Model.searchFilters.SelectedDateRange, new { @class = "form-control mt -2 mb-2 filter", placeholder = "Select data range", id = "Validity" })
+                                    <label for="Validity" class="input-group-append">
+                                        <span class="input-group-text fs-xl" style="height: 91%;">
+                                            <i class="fal fa-calendar-alt"></i>
+                                        </span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-5 col-xl-2 mb-0 mt-2 mb-2 filter">
+                            @Html.DropDownListFor(x => Model.searchFilters.SelectedCategory, Model.NewTip.TipCategoryList, "Select Category", new { @class = "custom-select", id = "TipCategoryFilterList", name = "TipCategoryList" })
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-5 col-xl-2 mb-0 mt-2 mb-2">
+                            @*<label for="languageList">Select language:</label>*@
+                            @*<select id="languageList" class="form-control mt-2 mb-2"><option>Select language</option></select>*@
+                            @Html.DropDownListFor(x => Model.searchFilters.SelectedLanguage, Model.languageModel.LanguageList, "Select Language", new { @class = "custom-select", id = "LanguageFilterList", name = "Languagelist" })
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12 col-lg-2 col-xl-1 mb-0 mt-2 mb-2 ml-5 ml-md-0">
+                            <button type="submit" value="Submit" class="btn btn-primary float-right" id="TipSearch" name="BannerSearch">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade mb-4">
+                        <div class="panel-hdr">
+                            <h2>Tip of the Day (View)</h2>
+                            <div class="panel-toolbar float-right mr-2">
+                                @*<ul class="nav nav-tabs">
+                                        <li>@Html.ActionLink("Add new Tip", "", "", new { @class = "btn btn-light mr-4", data_toggle="tab", href = "#addnew" })</li>
+                                    </ul>*@
+                                <button type="button" id="btn_grid" class="btn btn-light mr-4">Add new Tip</button>
+                                @*@Html.ActionLink("Add new Tip", "", "", new { @class = "btn btn-light mr-4", id = "btn_grid" })*@
+                            </div>
+                            <div class="panel-toolbar float-right pr-2">
+                                @*<button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>*@
+                                @*<button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>*@
+                                @*<button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>*@
+                            </div>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-tips" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">Sl. No</td>
+                                                    @*<td class="fw-500 text-center">Tip ID</td>*@
+                                                    <td class="fw-500 text-center">Tip Category</td>
+                                                    <td class="fw-500 text-center">Tip Title</td>
+                                                    <td class="fw-500 text-center">Tip Text</td>
+                                                    <td class="fw-500 text-center mw-70px">Active from</td>
+                                                    <td class="fw-500 text-center mw-70px">Active till</td>
+                                                    <td class="fw-500 text-center">Status</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    if (modelData != null)
+                                                    {
+                                                        int slno = 0;
+                                                        foreach (var itm in modelData)
+                                                        {
+                                                            slno++;
+                                                            <tr>
+                                                                <td name="slno" class="text-center" data-tip-id="@itm.tipID">@slno</td>
+                                                                @*<td class="text-center"><span name="tipID">@itm.tipID</span></td>*@
+                                                                <td>@itm.tipCategory</td>
+                                                                <td>@itm.tipTitle</td>
+                                                                <td class="w-50">@itm.tipText</td>
+                                                                <td class="text-center">@itm.validfrom.ToString("dd-MMM-yyyy")</td>
+                                                                <td class="text-center">@itm.validthru.ToString("dd-MMM-yyyy")</td>
+                                                                <td class="text-center">
+                                                                    <span name="status">
+                                                                        @if (itm.status == "A")
+                                                                        {<a href="javascript:void(0);" class="badge badge-success badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Active</a>}
+                                                                        else if (itm.status == "E")
+                                                                        { <a href="javascript:void(0);" class="badge badge-secondary badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status" style="pointer-events: none; cursor: default;">Expired</a>}
+                                                                        else
+                                                                        { <a href="javascript:void(0);" class="badge badge-danger badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Inactive</a>}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="add" class="row mt-2 collapse">
+                <div id="grid" class="col-12">
+                    <div class="panel bg-subtlelight-fade mb-4">
+                        <div class="panel-hdr">
+                            <h2>Add new Tip of the Day</h2>
+                            <div class="panel-toolbar float-right mr-2">
+                                @*<ul class="nav nav-tabs">
+                                        <li>@Html.ActionLink("Show Gridview", "", "", new { @class = "btn btn-light mr-4", data_toggle = "tab", href = "#addnew", id="bnt_add" })</li>
+                                    </ul>*@
+                                <button type="button" id="bnt_add" class="btn btn-light mr-4">Show Gridview</button>
+                                @*@Html.ActionLink("Show Gridview", "", "", new { @class = "btn btn-light mr-4", id = "bnt_add" })*@
+                            </div>
+                            <div class="panel-toolbar float-right pr-2">
+                                @*<button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>*@
+                                @*<button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>*@
+                            </div>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content mt-5">
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.TipTitle, "Tip of the Day Title*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                @Html.TextBoxFor(x => x.NewTip.TipTitle, new { @maxlength = "50", @class = "form-control", Required = "required", id = "TipTitle" })
+                                                @Html.ValidationMessageFor(x => x.NewTip.TipTitle)
+                                                <div class="invalid-feedback">Tip Title is required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.TipText, "Tip of the Day Text*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12">
+                                            @Html.TextAreaFor(x => x.NewTip.TipText, new { @class = "form-control", required = "required" })
+                                            <div class="invalid-feedback">Tip Text is required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.TipCategoryList, "Select Category*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 Tip-Category">
+                                            @Html.DropDownListFor(x => Model.NewTip.SelectedCategory, Model.NewTip.TipCategoryList, "Select Category", new { @class = "custom-select", id = "TipCategoryList", name = "TipCategoryList", required = "required" })
+                                            @*<div class="invalid-feedback">Tip Category is required.</div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.StateList, "Select States*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 Tip-States">
+                                            @*@Html.DropDownListFor(x => Model.NewTip.SelectedStates, Model.NewTip.StateList, null, new { @class = "form-control", id = "StateList", name = "StateList", multiple = "multiple" })*@
+                                            @Html.DropDownListFor(x => x.NewTip.SelectedStates, new MultiSelectList(Model.NewTip.StateList.Items, "MStateCode_I", "MStateName_VC", Model.NewTip.SelectedStates), null, new { @class = "form-control", id = "StateList", name = "StateList", multiple = "multiple" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.StateList, "Select Districts*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 Tip-Ditricts">
+                                            @*@Html.DropDownListFor(x => Model.NewTip.SelectedDistricts, Model.NewTip.DistrictList, null, new { @class = "form-control", id = "DistrictList", name = "DistrictList", multiple = "multiple" })*@
+                                            @Html.DropDownListFor(x => x.NewTip.SelectedDistricts, new MultiSelectList(Model.NewTip.DistrictList.Items, "MDistrictCode_VC", "MDistrictName_VC", Model.NewTip.SelectedDistricts), null, new { @class = "form-control", id = "DistrictList", name = "DistrictList", multiple = "multiple" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.Validity, "Select validity period*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12">
+                                            <div class="controls mt-2">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(x => Model.NewTip.Validity, new { @class = "form-control", placeholder = "Select data range", id = "Validity" })
+                                                    <label for="Validity" class="input-group-append">
+                                                        <span class="input-group-text fs-xl" style="height: 109%;">
+                                                            <i class="fal fa-calendar-alt"></i>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+                                        @Html.LabelFor(x => x.NewTip.languageModel.LanguageList, "Select Applicable Languages*", new { @class = "form-label pt-lg-2" })
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 Tip-Language">
+                                            @Html.DropDownListFor(x => x.NewTip.languageModel.selectedApplicableLanguage, new MultiSelectList(Model.NewTip.languageModel.LanguageList.Items, "Languageid", "Languagename", Model.NewTip.languageModel.selectedApplicableLanguage), null, new { @class = "form-control", id = "AppLanguageList", name = "AppLanguageList", multiple = "multiple" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pl-lg-6 mb-4">
+                                    <div class="col-lg-3 col-sm-12 pl-lg-6 align-middle">
+
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <div class="col-lg-12 text-right">
+                                            @*@Html.ActionLink("Submit", "SubmitNewTip", "TipoftheDay", new { @class= "btn btn-primary", type="submit" })*@
+                                            <button type="submit" value="Submit" class="btn btn-primary" id="NewTipSubmit" name="NewTipSubmit">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(x => x.tipListCount, new { id = "tipRange" })
+    </div>
+    <script>
+
+    $(document).ready(function () {
+
+
+        //Validate error message
+        var messageText =@Html.Raw(ViewBag.Status);
+        var TipID = @Html.Raw(ViewBag.TipID);
+
+        var tablePage=@Html.Raw(ViewBag.DataCount);
+        console.log(tablePage);
+        if (messageText == "Success") {
+            Swal.fire("Success!", "New Tip has been added and Tip ID is " + TipID + ".", "success");
+        }
+        else if (messageText == "Limit") {
+            Swal.fire("Failed!", "Tip of the day Limit exceeded!", "failed");
+        }
+        else if (messageText == "Failed") {
+            Swal.fire("Failed!", "Unable to add the new Tip", "failed");
+        }
+
+
+
+        $('#Languagelist').change(function () {
+            $("#form1").first().submit();
+        });
+
+
+        var table = $('#dt-tips').dataTable({
+                responsive: true,
+                dom:
+                    /*	--- Layout Structure
+                        --- Options
+                        l	-	length changing input control
+                        f	-	filtering input
+                        t	-	The table!
+                        i	-	Table information summary
+                        p	-	pagination control
+                        r	-	processing display element
+                        B	-	buttons
+                        R	-	ColReorder
+                        S	-	Select
+
+                        --- Markup
+                        < and >				- div element
+                        <"class" and >		- div with a class
+                        <"#id" and >		- div with an ID
+                        <"#id.class" and >	- div with an ID and a class
+
+                        --- Further reading
+                        https://datatables.net/reference/option/dom
+                        --------------------------------------
+                     */
+                    "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        text: 'Column Visibility',
+                        titleAttr: 'Col visibility',
+                        className: 'btn-outline-default'
+                    }
+
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'text-center'
+                    },
+                    {
+                        targets: 5,
+                        className: 'text-center'
+                    }
+                    ,
+                    {
+                        targets: 6,
+                        className: 'text-center'
+                    }
+                ],
+                totalPages:5
+            });
+
+
+        //activating menu li
+        $('#Tip_of_the_Day').parent().parent().addClass('active open');
+        $('#Tip_of_the_Day').addClass('active');
+
+
+        $('#btn_grid').click(function () {
+
+
+            $('#add').removeClass('collapse');
+            $('#add').removeClass('in');
+            $('#add').addClass('fadeinleft');
+
+
+            $('.filter').removeClass('visible');
+            $('.filter').addClass('invisible');
+            $('.filter').addClass('in');
+            $('.filter').addClass('fadeinleft');
+
+
+            $('#grid').addClass('collapse');
+            $('#grid').addClass('in');
+            $('#grid').addClass('fadeinleft');
+
+            return false;
+        });
+
+        $('#bnt_add').click(function () {
+
+
+            $('#grid').removeClass('collapse');
+            $('#grid').removeClass('in');
+            $('#grid').addClass('fadeinleft');
+
+
+            $('.filter').removeClass('invisible');
+            $('.filter').addClass('visible');
+            $('.filter').removeClass('in');
+            $('.filter').removeClass('fadeinleft');
+
+            $('#add').addClass('collapse');
+            $('#add').addClass('in');
+            $('#add').addClass('fadeinleft');
+
+            return false;
+        });
+
+
+        //Multi-Select plugin
+        //Category List
+        $('#TipCategoryList').multiselect({
+            buttonWidth: '100%'
+        });
+        //State List
+        $('#StateList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No states selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 states selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+        //District List
+        $('#DistrictList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No states selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Districts selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        //Applicable Languages List
+        $('#AppLanguageList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        //For Filters
+        $('#LanguageFilterList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        $('#TipCategoryFilterList').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+
+        //Datepicker
+        $('#Validity, #datepicker-modal-2').daterangepicker(
+            {
+
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+
+
+        $('#dt-tips').on('click', 'a.badge-pill', function () {
+
+            var elm = $(this);
+            var tipID = $(this).closest('tr').find('td[name=slno]');
+            var curStatus = $(this).closest('tr').find('span[name=status]');
+            var languageID = $('#Languagelist').val();
+            console.log(tipID);
+            if (tipID.text() == '') {
+                tipID = $(this).closest('tr').prev('tr').find('td[name=slno]');
+                curStatus = $(this).closest('tr').prev('tr').find('span[name=status]');
+            }
+            console.log(tipID.attr('data-tip-id'));
+            var targetStatus = '';
+            console.log(curStatus.text().trim());
+            if (curStatus.text().trim() == 'Active') {
+                targetStatus = 0;
+            }
+            else {
+                targetStatus = 1;
+            }
+
+            Swal.fire(
+                {
+                    title: "Do you want to change the status?",
+                    //text: "You won't be able to revert this!",
+                    //type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes!"
+                }).then(function (result) {
+                    if (result.dismiss == 'cancel') {
+                    }
+                    else if (result.dismiss == 'esc') {
+                    }
+                    else if (result.dismiss == 'backdrop') {
+                    }
+                    else {
+                        setActiveStatus(tipID.attr('data-tip-id'), targetStatus, languageID, elm);
+                    }
+                    console.log(result);
+                });
+        });
+
+        //redraw datatable
+        $('#dt-tips_paginate').on('click.page-link', function () {
+
+
+            $('#dt-tips').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+        });
+
+
+        //adding validation tags
+        $('<div class="invalid-feedback">Tip Category is required.</div>').insertAfter('.Tip-Category .btn-group');
+        $('<div class="invalid-feedback">Tip State is required.</div>').insertAfter('.Tip-States .btn-group');
+        $('<div class="invalid-feedback">Tip District is required.</div>').insertAfter('.Tip-Ditricts .btn-group');
+        $('<div class="invalid-feedback">Applicable Language is required.</div>').insertAfter('.Tip-Language .btn-group');
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+    });
+
+
+
+    function getFormattedDate(date) {
+        var Str =
+        ("00" + date.getDate()).slice(-2)
+        + "-"+ ("00" + (date.getMonth() + 1)).slice(-2)
+        + "-" + date.getFullYear() + " "
+        + ("00" + date.getHours()).slice(-2) + ":"
+        + ("00" + date.getMinutes()).slice(-2)
+        + ":" + ("00" + date.getSeconds()).slice(-2);
+
+    return Str;
+    }
+
+        function setActiveStatus(tipID, targetStatus, languageID, elm) {
+        $.post('ChangeTipStatus',
+            {
+                TipID: tipID,
+                TipStatus: targetStatus,
+                LanguageID: languageID
+            })
+            .done(function (data) {
+                if (data == 'Success') {
+                    if (targetStatus == 0) {
+                        elm.text('Inactive');
+                        elm.removeClass('badge-success');
+                        elm.addClass('badge-danger');
+                    }
+                    else {
+                        elm.text('Active');
+                        elm.removeClass('badge-danger');
+                        elm.addClass('badge-success');
+                    }
+                    Swal.fire("Success!", "Status has been changed.", "success");
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        //title: data,
+                        text: data//,
+                        //footer: '<a href>Why do I have this issue?</a>'
+                    });
+                }
+            })
+            .fail(function (xhr, textStatus, error) {
+                Swal.fire({
+                    icon: 'error',
+                    //title: data,
+                    text: xhr.responseText//,
+                    //footer: '<a href>Why do I have this issue?</a>'
+                });
+                console.log(xhr.responseText);
+            });
+    }
+
+
+    //validate on submit
+    $("#NewTipSubmit").click(function (event) {
+
+
+
+        //add required if none selected
+        if ($('#StateList').val() == '' && $('#DistrictList').val() == '') {
+            $('#StateList').attr('Required', 'required');
+            $('#DistrictList').attr('Required', 'required');
+        }
+
+        //remove required if states selected
+        if ($('#StateList').val() != '') {
+            $('#DistrictList').removeAttr('Required');
+        }
+        //remove required if district selected
+        if ($('#DistrictList').val() != '') {
+            $('#StateList').removeAttr('Required');
+        }
+
+        if ($('#AppLanguageList').val() == '') {
+            $('#AppLanguageList').attr('Required', 'required');
+        }
+
+
+        // Fetch form to apply custom Bootstrap validation
+        var form = $("#form1")
+        if (form[0].checkValidity() === false) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.addClass('was-validated');
+    });
+
+    </script>
+}

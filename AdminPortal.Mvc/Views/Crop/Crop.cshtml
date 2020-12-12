@@ -1,0 +1,274 @@
+﻿@using AdminPortal.Mvc.Models.Crop
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model AdminPortal.Mvc.Models.Crop.Crop
+
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.Global.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+    List<AdminPortal.Mvc.Models.Crop.CropData> CropModeldata = ViewBag.CropList == null ? null : ViewBag.CropList;
+}
+
+<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="~/Custom/CustomStyle.css" />
+<script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+<style>
+    .multiselect {
+        text-align: left;
+    }
+
+    .badge-pill {
+        min-width: 55px;
+    }
+</style>
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Mandi</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-carrot mr-1 fs-sm"></i>Crop</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+<style>
+    .select2-selection__arrow b {
+        display: none !important;
+    }
+</style>
+@using (Html.BeginForm("Crop", "Crop", FormMethod.Post, new { @id = "form1", novalidate = "", @class = "needs-validation" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-2 col-xl-6">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon  fal fa-carrot"></i>
+                        Crop
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2 text-right min-width-0">
+                    <a href="@Url.Action("DownloadCropHistory", "Crop")" title="Export Mandi Data"><img src="~/img/icon_excel.png" /></a>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => x.Mapping.SelectedMandi, new MultiSelectList(Model.Mapping.MandiList.Items, "Mandi_ID", "Mandi_Name", Model.Mapping.MandiList), null, new { @class = "form-control mt-2 mb-2", id = "MandiList", name = "MandiList", multiple = "multiple" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => Model.searchFilters.SelectedLanguage, Model.languageModel.LanguageList, "Select Language", new { @class = "custom-select", id = "LanguageFilterList", name = "Languagelist" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="EnqSearch" name="EnqSearch">Apply</button>
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade mb-5">
+                        <div class="panel-hdr">
+                            <h2>Crop</h2>
+                            <div class="panel-toolbar float-right mr-2">
+                                @*@Html.ActionLink("Mapping", "", "", new { @class = "btn btn-light mr-4", id = "btn_grid" })*@
+                            </div>
+                            <div class="panel-toolbar float-right pr-2">
+                            </div>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-crop" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">Sl. No</td>
+                                                    @*<td class="fw-500 text-center">Code</td>*@
+                                                    <td class="fw-500 text-center">Crop</td>
+                                                    <td class="fw-500 text-center">Mandi</td>
+                                                    <td class="fw-500 text-center">Category</td>
+                                                    <td class="fw-500 text-center">Arrival Date</td>
+                                                    <td class="fw-500 text-center">Last Modified Date</td>
+                                                    <td class="fw-500 text-center">Min. Price</td>
+                                                    <td class="fw-500 text-center">Max. Price</td>
+                                                    <td class="fw-500 text-center">Modal. Price</td>
+                                                    <td class="fw-500 text-center">Status</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    if (CropModeldata != null)
+                                                    {
+                                                        int slno = 0;
+                                                        foreach (dynamic itm in CropModeldata)
+                                                        {
+                                                            slno++;
+                                                            <tr>
+                                                                <td name="slno" class="text-center">@slno</td>
+                                                                @*<td class="text-center">@itm.CropID</td>*@
+                                                                <td>@itm.CropName</td>
+                                                                <td>@itm.MandiName</td>
+                                                                <td>@itm.CategoryName</td>
+                                                                <td class="text-center">@itm.ArrivalDate.ToString("dd-MMM-yyyy")</td>
+                                                                <td class="text-center">@itm.MODIFIEDDT_D.ToString("dd-MMM-yyyy")</td>
+                                                                <td class="text-center">@itm.MinPrice</td>
+                                                                <td class="text-center">@itm.MaxPrice</td>
+                                                                <td class="text-center">@itm.ModalPrice</td>
+                                                                <td class="text-center">@itm.ACTIVEFLAG_C</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            var MandiListLangArray = [];
+            var MandiListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["MandiList"])) ;
+            //Json.Encode(@ViewData["MandiList"])
+
+
+        $.each(MandiListIDArray, function () {
+            MandiListLangArray.push(this);
+            });
+            $("#MandiList").val(MandiListLangArray);
+
+
+            var start = new Date();
+            var end = new Date();
+
+            $('#Validity, #datepicker-modal-2').daterangepicker(
+                {
+                    startDate: start,
+                    endDate: end,
+                }, function (start, end, label) {
+                });
+
+             $('#cmblang').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html().replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"));
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+            //Mandi List
+            $('#MandiList').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                //enableFiltering: true
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Mandi selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Mandi selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html().replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"));
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+            $('#LanguageFilterList').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                //enableFiltering: true
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+
+              $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+            $('#Mandi_Crops').parent().parent().addClass('active open');
+            $('#Mandi_Crops').addClass('active');
+            var AngleElm = $('.open .fa-angle-down');
+            AngleElm.removeClass('fa-angle-down');
+            AngleElm.addClass('fa-angle-up');
+
+             $('#dt-crop').DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+             //$('#dt-crop').dataTable(
+             //       {
+             //           responsive: true
+             //       });
+             //   $('.js-thead-colors a').on('click', function () {
+             //       var theadColor = $(this).attr("data-bg");
+             //       console.log(theadColor);
+             //       $('#dt-mandi thead').removeClassPrefix('bg-').addClass(theadColor);
+             //   });
+
+             //   $('.js-tbody-colors a').on('click', function () {
+             //       var theadColor = $(this).attr("data-bg");
+             //       console.log(theadColor);
+             //       $('#dt-crop').removeClassPrefix('bg-').addClass(theadColor);
+             //   });
+
+
+        })
+
+    </script>
+}

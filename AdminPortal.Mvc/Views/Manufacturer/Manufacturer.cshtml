@@ -1,0 +1,197 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewBag.Title = "Manufacturer";
+    Layout = "_Layout";
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.Manufacturer.Manufacturer> ManufacturerModeldata = ViewBag.Manufacturerlist == null ? null : ViewBag.Manufacturerlist;
+    List<AdminPortal.Mvc.Models.Global.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-garage-car"></i>Manufacturer</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+
+@using (Html.BeginForm("Manufacturer", "Manufacturer", FormMethod.Post, new { @id = "frmmanu" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon fal fa-garage-car"></i>
+                        Manufacturer
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmbmanlang" name="cmbmanlang" class="custom-select">
+                        @foreach (AdminPortal.Mvc.Models.Global.Language item in LanguageModeldata)
+                        {
+                            if (item.Languageid == 1)
+                            {
+                                <option value=@item.Languageid selected> @item.Languagename</option>
+                            }
+                            else
+                            {
+                                <option value=@item.Languageid> @item.Languagename</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="ManuSearch" name="ManuSearch">Apply</button>
+                </div>
+            </div>
+            <div>
+                <div class="col-xl-12 row">
+
+                    <div class="alert alert-info" position:absolute; id="sucessmessage" style="display:none;width:500px;margin:0 auto;">
+                    </div>
+
+                    <div class="alert alert-danger" position:absolute; id="errormessage" style="display:none;width:500px;">
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2>Manufacturer</h2>
+                            <div class="panel-toolbar float-right mr-2">
+
+                            </div>
+                            @*<div class="panel-toolbar float-right pr-2">
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                                </div>*@
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-Manufacturer" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">S.No</td>
+                                                    <td class="fw-500 text-center">Code</td>
+                                                    <td class="fw-500 text-center">Manufacturer</td>
+                                                    <td class="fw-500 text-center">Status</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int tpno = 0;
+                                                }
+                                                @foreach (AdminPortal.Mvc.Models.Manufacturer.Manufacturer item in ManufacturerModeldata)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">  @{ tpno++; } @tpno</td>
+                                                        <td class="text-center">
+                                                            @item.MMANUFACTURERCODE
+                                                        </td>
+                                                        <td>
+                                                            @item.MManufacturerName
+                                                        </td>
+                                                        <td align="center">
+                                                            @if (item.ACTIVEFLAG_C == "Active")
+                                                            {<span class="badge badge-success badge-pill">Active</span>}
+                                                            else
+                                                            { <span class="badge badge-danger badge-pill">Inactive</span>}
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+    $(document).ready(function () {
+
+        $("#cmbmanlang").val(@HttpContextAccessor.HttpContext.Session.GetString("Dlangid"));
+
+        //$("#cmbmanlang").on("change", function () {
+        //    $("#frmmanu").first().submit();
+
+        //});
+
+         $('#dt-Manufacturer').dataTable(
+            {
+                responsive: true
+            });
+
+
+
+        $('#Manufacturer').parent().parent().addClass('active open');
+        $('#Manufacturer').addClass('active');
+
+
+        //For Filters
+        $('#cmbmanlang').multiselect({
+            buttonWidth: '100%',
+            enableClickableOptGroups: true,
+            includeSelectAllOption: true,
+            float: 'left',
+            //enableFiltering: true
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'No Languages selected';
+                }
+                else if (options.length > 3) {
+                    return 'More than 3 Languages selected!';
+                }
+                else {
+                    var labels = [];
+                    options.each(function () {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
+
+        $('button.multiselect').each(function () {
+            $(this).addClass('custom-select');
+        });
+
+    });
+
+    $('#dt-Manufacturer_paginate').on('click.page-link', function () {
+
+        $('#dt-Manufacturer').DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    });
+
+    </script>
+}
+
+
+

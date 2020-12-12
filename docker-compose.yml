@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  unifiedlogin.webapi:
+    image: ${DOCKER_REGISTRY-}unifiedloginwebapi
+    build:
+      context: .
+      dockerfile: UnifiedLogin.WebAPI/Dockerfile
+
+  profile.webapi:
+    image: ${DOCKER_REGISTRY-}profilewebapi
+    build:
+      context: .
+      dockerfile: Profile.WebAPI/Dockerfile
+

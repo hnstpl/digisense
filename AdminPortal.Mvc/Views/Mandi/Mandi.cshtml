@@ -1,0 +1,328 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@model AdminPortal.Mvc.Models.Mandi.MandiModel
+
+@{
+    ViewBag.Title = "Mandi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var modelData = ViewBag.MandiList == null ? null : ViewBag.MandiList;
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.Global.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+}
+
+<link rel="stylesheet" href="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.css" />
+<link rel="stylesheet" href="~/Custom/CustomStyle.css" />
+<script src="~/Content/Multiple-Select-Plugin-For-Bootstrap-Bootstrap-Multiselect/bootstrap-multiselect.js"></script>
+<style>
+    .multiselect {
+        text-align: left;
+    }
+
+    .badge-pill {
+        min-width: 55px;
+    }
+</style>
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-carrot mr-1 fs-sm"></i>Mandi</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+<style>
+    .select2-selection__arrow b {
+        display: none !important;
+    }
+</style>
+@using (Html.BeginForm("Mandi", "Mandi", FormMethod.Post, new { @id = "form1", novalidate = "", @class = "needs-validation" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-2 col-xl-4">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon  fal fa-carrot"></i>
+                        Mandi
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2 text-right min-width-0">
+                    <a href="@Url.Action("DownloadMandiHistory", "Mandi")" title="Export Mandi Data"><img src="~/img/icon_excel.png" /></a>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => x.Mapping.SelectedStates, new MultiSelectList(Model.Mapping.StateList.Items, "StateCodeI", "StateNameVc", Model.Mapping.StateList), null, new { @class = "form-control mt-2 mb-2", id = "StateList", name = "StateList", multiple = "multiple" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => x.Mapping.SelectedDistricts, new MultiSelectList(Model.Mapping.DistrictList.Items, "DistrictCodeVc", "DistrictNameVc", Model.Mapping.DistrictList), null, new { @class = "form-control mt-2 mb-2", id = "DistrictList", name = "DistrictList", multiple = "multiple" })
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    @Html.DropDownListFor(x => Model.searchFilters.SelectedLanguage, Model.languageModel.LanguageList, "Select Language", new { @class = "custom-select", id = "LanguageFilterList", name = "Languagelist" })
+                </div>
+
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="EnqSearch" name="EnqSearch">Apply</button>
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade mb-4">
+                        <div class="panel-hdr">
+                            <h2>Mandi</h2>
+                            <div class="panel-toolbar float-right mr-2">
+                                @*@Html.ActionLink("Mapping", "", "", new { @class = "btn btn-light mr-4", id = "btn_grid" })*@
+                            </div>
+                            <div class="panel-toolbar float-right pr-2">
+                            </div>
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-mandi" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">Sl. No</td>
+                                                    <td class="fw-500 text-center">Code</td>
+                                                    <td class="fw-500 text-center">Mandi</td>
+                                                    <td class="fw-500 text-center">State</td>
+                                                    <td class="fw-500 text-center">District</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    if (modelData != null)
+                                                    {
+                                                        int slno = 0;
+                                                        foreach (var itm in modelData)
+                                                        {
+                                                            slno++;
+                                                            <tr>
+                                                                <td name="slno" class="text-center">@slno</td>
+                                                                <td class="text-center">@itm.Mandi_ID</td>
+                                                                <td>@itm.Mandi_Name</td>
+                                                                <td>@itm.StateName_VC</td>
+                                                                <td>@itm.DistrictName_VC</td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            var start = new Date();
+            var end = new Date();
+
+        var StateListLangArray = [];
+        var StateListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["Statelist"]));
+
+        var DistrictListLangArray = [];
+        var DistrictListIDArray = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewData["Districtlist"]));
+
+        $.each(StateListIDArray, function () {
+        StateListLangArray.push(this);
+        });
+        $("#StateList").val(StateListLangArray);
+
+        $.each(DistrictListIDArray, function () {
+        DistrictListLangArray.push(this);
+        });
+        $("#DistrictList").val(DistrictListLangArray);
+
+
+            $('#Validity, #datepicker-modal-2').daterangepicker(
+                {
+                    startDate: start,
+                    endDate: end,
+                }, function (start, end, label) {
+                });
+
+             $('#cmblang').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+            //State List
+            $('#StateList').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                //enableFiltering: true
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No states selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 states selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html().replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"));
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+            //District List
+
+            $('#DistrictList').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                //enableFiltering: true
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No districts selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 districts selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html().replace("&gt;", ">").replace("&lt;", "<").replace("&amp;", "&"));
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+            $('#LanguageFilterList').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                //enableFiltering: true
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+            $('button.multiselect').each(function () {
+                $(this).addClass('custom-select');
+            });
+
+            $('#bnt_add').click(function () {
+
+
+                $('#grid').removeClass('collapse');
+                $('#grid').removeClass('in');
+                $('#grid').addClass('fadeinleft');
+
+
+                $('.filter').removeClass('invisible');
+                $('.filter').addClass('visible');
+                $('.filter').removeClass('in');
+                $('.filter').removeClass('fadeinleft');
+
+                $('#add').addClass('collapse');
+                $('#add').addClass('in');
+                $('#add').addClass('fadeinleft');
+
+                return false;
+            });
+
+            $('#btn_grid').click(function () {
+                $('#add').removeClass('collapse');
+                $('#add').removeClass('in');
+                $('#add').addClass('fadeinleft');
+
+
+                $('.filter').removeClass('visible');
+                $('.filter').addClass('invisible');
+                $('.filter').addClass('in');
+                $('.filter').addClass('fadeinleft');
+
+
+                $('#grid').addClass('collapse');
+                $('#grid').addClass('in');
+                $('#grid').addClass('fadeinleft');
+
+                return false;
+            });
+
+
+            $('#dt-mandi').on('click', 'a.badge-pill', function () {
+
+                return false;
+
+            });
+
+            $('#View_Mandi').parent().parent().addClass('active open');
+            $('#View_Mandi').addClass('active');
+            var AngleElm = $('.open .fa-angle-down');
+            AngleElm.removeClass('fa-angle-down');
+            AngleElm.addClass('fa-angle-up');
+
+             $('#dt-mandi').DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+
+
+        })
+
+    </script>
+}

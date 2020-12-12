@@ -1,0 +1,412 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewBag.Title = "DealerMaster";
+    Layout = "_Layout";
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.Dealer.Dealer> DealerModeldata = ViewBag.Dealerlist == null ? null : ViewBag.Dealerlist;
+    List<AdminPortal.Mvc.Models.Global.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+}
+
+<script src="~/SmartAdmin/js/alert/jquery-confirm.js"></script>
+<link rel="stylesheet" href="~/SmartAdmin/css/alert/jquery-confirm.css">
+
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"><i class="subheader-icon fal fa-garage-car mr-1 fs-sm"></i>Dealer</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+@using (Html.BeginForm("DealerMaster", "Dealer", FormMethod.Post, new { @id = "form2" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-9 col-xl-7">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon fal fa-garage-car"></i>
+                        Dealer
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmbtype" name="cmbtype" class="custom-select">
+                        <option value="0">Select Type</option>
+                        <option value="1">Sales</option>
+                        <option value="2">Services</option>
+                        <option value="3">Spares</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmblang" name="cmblang" class="custom-select">
+                        @foreach (AdminPortal.Mvc.Models.Global.Language item in LanguageModeldata)
+                        {
+                            if (item.Languageid == 1)
+                            {
+                                <option value=@item.Languageid selected> @item.Languagename</option>
+                            }
+                            else
+                            {
+                                <option value=@item.Languageid> @item.Languagename</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="DealerSearch" name="DealerSearch">Apply</button>
+                </div>
+            </div>
+            <div>
+                <div class="col-xl-12 row">
+                    <div class="alert alert-info" position:absolute; id="sucessmessage" style="display:none;width:500px;margin:0 auto;">
+                    </div>
+                    <div class="alert alert-danger" position:absolute; id="errormessage" style="display:none;width:500px;">
+                    </div>
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2>Dealer</h2>
+                            <div class="panel-toolbar float-right mr-2">
+
+                            </div>
+                            @*<div class="panel-toolbar float-right pr-2">
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                                </div>*@
+                        </div>
+                        <div class="panel-container show">
+                            <div class="panel-content">
+                                <div class="tab-content p-3">
+                                    <div class="tab-pane fade show active" role="tabpanel">
+                                        <table id="dt-dealer" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                            <thead>
+                                                <tr>
+                                                    <td class="fw-500 text-center">S.No</td>
+                                                    <td class="fw-500 text-center">Code</td>
+                                                    <td class="fw-500 text-center">Dealer</td>
+                                                    <td class="fw-500 text-center">Branch Code</td>
+                                                    <td class="fw-500 text-center">Branch</td>
+                                                    <td class="fw-500 text-center">Type</td>
+                                                    <td class="fw-500 text-center">Category</td>
+                                                    @*<td class="fw-500 text-center">Phone</td>*@
+                                                    <td class="fw-500 text-center">Address</td>
+                                                    <td class="fw-500 text-center">Status</td>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int dno = 0;
+                                                }
+                                                @foreach (AdminPortal.Mvc.Models.Dealer.Dealer item in DealerModeldata)
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">  @{ dno++; } @dno</td>
+                                                        <td class="text-center" name="DealerCode">
+                                                            @item.MDealerCode
+                                                        </td>
+                                                        <td name="DealerName">
+                                                            @item.MDealerName
+                                                        </td>
+                                                        <td name="BranchCode">
+                                                            @item.MBranchCode_VC
+                                                        </td>
+                                                        <td name="BranchName">
+                                                            @item.MBranchName
+                                                        </td>
+                                                        <td name="DealerType">
+                                                            @item.MdealerType_vc
+                                                        </td>
+                                                        <td name="Category">
+                                                            @item.MCategoryCode_VC
+                                                        </td>
+                                                        @*<td name="Phone">
+                                                                @item.MPhone
+                                                            </td>*@
+                                                        <td name="Address">
+                                                            @Html.Raw(item.MAddress)
+                                                        </td>
+                                                        <td align="center">
+                                                            <span name="status">
+                                                                @if (item.MStatus == "Active")
+                                                                {<a href="javascript:void(0);" class="badge badge-success badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Active</a>}
+                                                                else
+                                                                { <a href="javascript:void(0);" class="badge badge-danger badge-pill" data-toggle="tooltip" data-placement="auto" title="" data-original-title="Click to change status">Inactive</a>}
+                                                            </span>
+
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#dt-dealer').on('click', '.badge-pill', function () {
+
+                var dealer = $(this).closest('tr').find('td[name*=DealerCode]');
+                var Status = $(this).closest('tr').find('span[name=status]');
+                var Category = $(this).closest('tr').find('td[name*=Category]');
+                var branch = $(this).closest('tr').find('td[name*=BranchCode]');
+                var act = $(this);
+
+                if (dealer.text().trim() == '') {
+                    dealer = $(this).closest('tr').prev('tr').find('td[name=DealerCode]');
+                    Status = $(this).closest('tr').prev('tr').find('span[name=status]');
+                    Category = $(this).closest('tr').prev('tr').find('td[name=Category]');
+                    branch = $(this).closest('tr').prev('tr').find('td[name=BranchCode]');
+                }
+
+
+                var formData = new FormData();
+                    formData.append("dealercode", dealer.text().trim());
+
+
+                if (Status.text().trim().toLowerCase() == "active") {
+                        formData.append("active", "I");
+                    } else {
+                        formData.append("active", "A");
+                    }
+
+                formData.append("languagecode", $("#cmblang").val());
+                formData.append("branchcode", branch.text().trim());
+
+
+                    Swal.fire(
+                        {
+                            title: "Do you want to change the status?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes!"
+                        }).then(function (result) {
+                            if (result.value) {
+
+                                  $.ajax({
+                        url: "./Updatedealer",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+
+                            if (act.text() == "Active") {
+                                act.removeClass('badge-success');
+                                act.addClass('badge-danger');
+                                act.text('Inactive');
+                            }
+                            else {
+                                act.removeClass('badge-danger');
+                                act.addClass('badge-success');
+                                act.text('Active');
+                            }
+                            Swal.fire("Success!", "Dealer status updated", "success");
+
+                        },
+                        failure: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        },
+                        error: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        }
+
+                    });
+
+                            }
+                        });
+            });
+
+            $('a.badge-pill').click(function () {
+
+                var dealer = $(this).closest('tr').find('td[name*=DealerCode]');
+                var Status = $(this).closest('tr').find('span[name=status]');
+                var Category = $(this).closest('tr').find('td[name*=Category]');
+                var branch = $(this).closest('tr').find('td[name*=BranchCode]');
+                var act = $(this);
+
+                if (dealer.text().trim() == '') {
+                    dealer = $(this).closest('tr').prev('tr').find('td[name=DealerCode]');
+                    Status = $(this).closest('tr').prev('tr').find('span[name=status]');
+                    Category = $(this).closest('tr').prev('tr').find('td[name=Category]');
+                    branch = $(this).closest('tr').prev('tr').find('td[name=BranchCode]');
+                }
+
+                var formData = new FormData();
+                    formData.append("dealercode", dealer.text().trim());
+
+
+                if (Status.text().trim().toLowerCase() == "active") {
+                        formData.append("active", "I");
+                    } else {
+                        formData.append("active", "A");
+                    }
+
+                formData.append("languagecode", $("#cmblang").val());
+                formData.append("branchcode", branch.text().trim());
+
+
+                    Swal.fire(
+                        {
+                            title: "Do you want to change the status?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes!"
+                        }).then(function (result) {
+                            if (result.value) {
+
+                                  $.ajax({
+                        url: "./Updatedealer",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+
+                            if (act.text() == "Active") {
+                                act.removeClass('badge-success');
+                                act.addClass('badge-danger');
+                                act.text('Inactive');
+                            }
+                            else {
+                                act.removeClass('badge-danger');
+                                act.addClass('badge-success');
+                                act.text('Active');
+                            }
+                            Swal.fire("Success!", "Dealer status updated", "success");
+
+                        },
+                        failure: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        },
+                        error: function (response) {
+                            Swal.fire("Error!", "Problem while updating the status", "error");
+                        }
+
+                    });
+
+                            }
+                        });
+                });
+
+
+            $("#cmblang").val(@HttpContextAccessor.HttpContext.Session.GetString("Dlangid"));
+            $("#cmbtype").val(@HttpContextAccessor.HttpContext.Session.GetString("type"));
+
+            $("#btnVAaided").click(function Display() {
+
+                    $(".modal-title").html("Dealer Information");
+                    $('#modal-Edit').modal('show');
+
+                });
+
+                $('#dt-dealer').dataTable(
+                    {
+                        responsive: true
+                    });
+                $('.js-thead-colors a').on('click', function () {
+                    var theadColor = $(this).attr("data-bg");
+                    console.log(theadColor);
+                    $('#dt-dealer thead').removeClassPrefix('bg-').addClass(theadColor);
+                });
+
+                $('.js-tbody-colors a').on('click', function () {
+                    var theadColor = $(this).attr("data-bg");
+                    console.log(theadColor);
+                    $('#dt-dealer').removeClassPrefix('bg-').addClass(theadColor);
+                });
+                //activating menu li
+                $('#Dealer').parent().parent().addClass('active open');
+                $('#Dealer').addClass('active');
+
+
+            //For Filters
+            $('#cmblang').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+            $('#cmbtype').multiselect({
+                buttonWidth: '100%',
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                float: 'left',
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'No Languages selected';
+                    }
+                    else if (options.length > 3) {
+                        return 'More than 3 Languages selected!';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+
+            $('button.multiselect').each(function () {
+                $(this).addClass('custom-select');
+            });
+        });
+
+        $('#dt-dealer_paginate').on('click.page-link', function () {
+
+            $('#dt-dealer').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+        });
+
+    </script>
+}
+

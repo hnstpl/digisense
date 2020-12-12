@@ -1,0 +1,35 @@
+﻿<Properties StartupConfiguration="{C9EB6BF9-C626-428D-BC1A-31A11F133EEE}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AdminPortal.Mvc/Views/Shared/_Navigation.cshtml">
+    <Files>
+      <File FileName="AdminPortal.Mvc/Controllers/AccountController.cs" Line="16" Column="21" />
+      <File FileName="AdminPortal.Mvc/Views/Shared/_Navigation.cshtml" Line="88" Column="10" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Digisense" expanded="True">
+            <Node name="AdminPortal.Mvc" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Shared" expanded="True">
+                  <Node name="_Navigation.cshtml" selected="True" />
+                </Node>
+              </Node>
+              <Node name="wwwroot" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.UnifiedLogin.WebAPI PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/mac-10/Documents/Repos/web/Aspnetcore/Digisense/Masters.WebAPI/Controllers/ModelsController.cs" relfile="Masters.WebAPI/Controllers/ModelsController.cs" line="23" column="1" />
+      <Breakpoint file="/Users/mac-10/Documents/Repos/web/Aspnetcore/Digisense/Masters.WebAPI/Startup.cs" relfile="Masters.WebAPI/Startup.cs" line="38" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

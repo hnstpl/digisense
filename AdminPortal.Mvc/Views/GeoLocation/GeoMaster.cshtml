@@ -1,0 +1,342 @@
+﻿@using AdminPortal.Mvc.Models.GeoLocation
+@using AdminPortal.Mvc.Extensions
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Geo Location";
+}
+
+@{
+
+    List<AdminPortal.Mvc.Models.GeoLocation.State> StateModeldata = ViewBag.StateListItem == null ? null : ViewBag.StateListItem;
+    List<AdminPortal.Mvc.Models.GeoLocation.District> DisrictModeldata = ViewBag.DistrictListItem == null ? null : ViewBag.DistrictListItem;
+    List<AdminPortal.Mvc.Models.GeoLocation.Tehsil> TehsilModeldata = ViewBag.TehsilListItem == null ? null : ViewBag.TehsilListItem;
+    List<AdminPortal.Mvc.Models.Global.Language> LanguageModeldata = ViewBag.LangListItem == null ? null : ViewBag.LangListItem;
+
+
+}
+
+<ol class="breadcrumb page-breadcrumb">
+    <li class="breadcrumb-item"><a href="../CustomerApplication/Home"><i class="fal fa-home mr-1 fs-md"></i>Home</a></li>
+    <li class="breadcrumb-item"><i class="fal fa-desktop-alt mr-1 fs-sm"></i>Master</li>
+    <li class="breadcrumb-item"> <i class="subheader-icon fal fa-search-location"></i>Geo Location</li>
+    <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
+</ol>
+
+@using (Html.BeginForm("GeoMaster", "GeoLocation", FormMethod.Post, new { @id = "form1" }))
+{
+    <div class="subheader">
+        <div class="card col-12">
+            <div class="row mt-2">
+                <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+                    <h1 class="subheader-title mt-2 mb-2 pt-1">
+                        <i class="subheader-icon fal fa-search-location"></i>
+                        Geo Location
+                    </h1>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-2 mt-2 mb-2">
+                    <select id="cmblang" name="cmblang" class="custom-select">
+                        @foreach (AdminPortal.Mvc.Models.Global.Language item in LanguageModeldata)
+                        {
+                            if (item.Languageid == 1)
+                            {
+                                <option value=@item.Languageid selected> @item.Languagename</option>
+                            }
+                            else
+                            {
+                                <option value=@item.Languageid> @item.Languagename</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-12 col-md-12 col-lg-3 col-xl-1 mt-2 mb-2">
+                    <button type="submit" value="Submit" class="btn btn-primary" id="GeoSearch" name="GeoSearch">Apply</button>
+                </div>
+            </div>
+            <div id="grid" class="row mt-2">
+                <div class="col-12">
+                    <div class="panel bg-subtlelight-fade">
+                        <div class="panel-hdr">
+                            <h2>Geo Location</h2>
+                            @*<div class="panel-toolbar float-right pr-2">
+                                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                                </div>*@
+                        </div>
+                        <div class="panel-container show">
+
+                            <div class="panel-header mt-2">
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="col-12">
+                                            <ul class="nav nav-tabs" role="tablist">
+                                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab_justified-state" role="tab"><i class="fal  fa-location-circle mr-1"></i> State</a></li>
+                                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab_justified-district" role="tab"><i class="fal fa-location mr-1"></i> District</a></li>
+                                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab_justified-tehsil" role="tab"><i class="fal fa-location-arrow mr-1"></i> Tehsil</a></li>
+                                            </ul>
+                                            <div class="tab-content border border-top-0 p-3" id="tabvariant" name="tabvariant">
+
+                                                <div class="tab-pane fade show active" id="tab_justified-state" role="tabpanel">
+
+                                                    <table id="dt-state" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="fw-500 text-center">S.No</td>
+                                                                <td class="fw-500 text-center">Code</td>
+                                                                <td class="fw-500 text-center">State</td>
+                                                                <td class="fw-500 text-center">Zone</td>
+                                                                <td class="fw-500 text-center">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{
+                                                                int sno = 0;
+                                                            }
+                                                            @foreach (AdminPortal.Mvc.Models.GeoLocation.State item in StateModeldata)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">  @{ sno++; } @sno</td>
+                                                                    <td class="text-center">
+                                                                        @item.MStateCode_I
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MStateName_VC
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MZoneCode_VC
+                                                                    </td>
+
+                                                                    <td align="center">
+                                                                        @if (item.MActiveFlag_C == "Active")
+                                                                        {<span class="badge badge-success badge-pill">Active</span>}
+                                                                        else
+                                                                        { <span class="badge badge-danger badge-pill">In active</span>}
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane fade" id="tab_justified-district" role="tabpanel">
+                                                    <table id="dt-district" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="fw-500 text-center">S.No</td>
+                                                                <td class="fw-500 text-center">Code</td>
+                                                                <td class="fw-500 text-center">District</td>
+                                                                <td class="fw-500 text-center">State</td>
+                                                                <td class="fw-500 text-center">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{
+                                                                int dno = 0;
+                                                            }
+                                                            @foreach (AdminPortal.Mvc.Models.GeoLocation.District item in DisrictModeldata)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">  @{ dno++; } @dno</td>
+                                                                    <td class="text-center">
+                                                                        @item.MDistrictCode_VC
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MDistrictName_VC
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MStatenAME_I.ToUpper()
+                                                                    </td>
+
+                                                                    <td align="center">
+                                                                        @if (item.MACTIVEFLAG_C == "Active")
+                                                                        {<span class="badge badge-success badge-pill">Active</span>}
+                                                                        else
+                                                                        { <span class="badge badge-danger badge-pill">Inactive</span>}
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane fade" id="tab_justified-tehsil" role="tabpanel">
+                                                    <table id="dt-tehsil" class="table table-bordered table-hover table-striped w-100" role="grid" aria-describedby="dt-basic_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="fw-500 text-center">S.No</td>
+                                                                <td class="fw-500 text-center">Code</td>
+                                                                <td class="fw-500 text-center">Tehsil</td>
+                                                                <td class="fw-500 text-center">District</td>
+                                                                <td class="fw-500 text-center">Status</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{
+                                                                int tno = 0;
+                                                            }
+                                                            @foreach (AdminPortal.Mvc.Models.GeoLocation.Tehsil item in TehsilModeldata)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-center">  @{ tno++; } @tno</td>
+                                                                    <td class="text-center">
+                                                                        @item.MTehsilCode_VC
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MTehsilName_VC
+
+                                                                    </td>
+                                                                    <td>
+                                                                        @item.MDistrictName
+                                                                    </td>
+                                                                    <td align="center">
+                                                                        @if (item.MACTIVEFLAG_C == "Active")
+                                                                        {<span class="badge badge-success badge-pill">Active</span>}
+                                                                        else
+                                                                        { <span class="badge badge-danger badge-pill">Inactive</span>}
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('.nav-tabs li').click(function () {
+
+                $('#dt-state').DataTable()
+                     .columns.adjust()
+                     .responsive.recalc();
+
+                $('#dt-district').DataTable()
+                .columns.adjust()
+                    .responsive.recalc();
+
+                $('#dt-tehsil').DataTable()
+                .columns.adjust()
+                    .responsive.recalc();
+
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+                $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust()
+                .fixedColumns().relayout();
+            });
+
+
+
+                $("#cmblang").val(@HttpContextAccessor.HttpContext.Session.GetString("langid"));
+
+                $('#dt-state').dataTable(
+                    {
+                        responsive: true
+                    });
+                $('#dt-district').dataTable(
+                    {
+                        responsive: true
+                    });
+                $('#dt-tehsil').dataTable(
+                    {
+                        responsive: true
+                    });
+
+
+                $('.js-thead-colors a').on('click', function () {
+                    var theadColor = $(this).attr("data-bg");
+                    $('#dt-state thead').removeClassPrefix('bg-').addClass(theadColor);
+                    $('#dt-district thead').removeClassPrefix('bg-').addClass(theadColor);
+                    $('#dt-tehsil thead').removeClassPrefix('bg-').addClass(theadColor);
+                });
+
+                $('.js-tbody-colors a').on('click', function () {
+                    var theadColor = $(this).attr("data-bg");
+                    console.log(theadColor);
+                    $('#dt-state').removeClassPrefix('bg-').addClass(theadColor);
+                    $('#dt-district').removeClassPrefix('bg-').addClass(theadColor);
+                    $('#dt-tehsil').removeClassPrefix('bg-').addClass(theadColor);
+
+                });
+
+
+                //activating menu li
+             $('#Geo_Location').parent().parent().addClass('active open');
+             $('#Geo_Location').addClass('active');
+
+             //For Filters
+             $('#cmblang').multiselect({
+                 buttonWidth: '100%',
+                 enableClickableOptGroups: true,
+                 includeSelectAllOption: true,
+                 float: 'left',
+                 //enableFiltering: true
+                 buttonText: function (options, select) {
+                     if (options.length === 0) {
+                         return 'No Languages selected';
+                     }
+                     else if (options.length > 3) {
+                         return 'More than 3 Languages selected!';
+                     }
+                     else {
+                         var labels = [];
+                         options.each(function () {
+                             if ($(this).attr('label') !== undefined) {
+                                 labels.push($(this).attr('label'));
+                             }
+                             else {
+                                 labels.push($(this).html());
+                             }
+                         });
+                         return labels.join(', ') + '';
+                     }
+                 }
+             });
+
+             $('button.multiselect').each(function () {
+                 $(this).addClass('custom-select');
+             });
+
+        });
+
+
+        $('#dt-state_paginate').on('click.page-link', function () {
+
+
+            $('#dt-state').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+        });
+
+        $('#dt-district_paginate').on('click.page-link', function () {
+
+            $('#dt-district').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+        });
+
+         $('#dt-tehsil_paginate').on('click.page-link', function () {
+
+            $('#dt-tehsil').DataTable()
+                .columns.adjust()
+                .responsive.recalc();
+         });
+
+    </script>
+}
+

@@ -1,0 +1,141 @@
+﻿body {
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #fff;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #fff;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #fff;
+}
+
+#frontul::before{
+    color:#fff;
+}
+
+#profileAvatar::after {
+    background: #627ca0 !important;
+}
+.panel-hdr {
+    background: #627ca0 !important;
+}
+
+.info-card {
+    height:130px !important;
+}
+
+.info-card .profile-image {
+    height: 3.215rem;
+}
+
+.info-card-text > span{
+    font-size:0.725rem;
+}
+
+main > .subheader {
+    margin-bottom:0.5rem !important;
+}
+
+.header-icon:not(.btn) .profile-image {
+    height:2rem !important;
+}
+
+.cursor{
+    text-decoration:none;
+}
+.page-breadcrumb {
+    margin: 0 0 1rem !important;
+}
+
+.panel-hdr h2 {
+    color: #fff;
+}
+.page-footer {
+    height: 1.2rem !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #fff transparent transparent transparent !important;
+    border-style: solid;
+    border-width: 5px 4px 0 4px;
+    height: 0;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.clr-wht{
+    color:#fff !important;
+}
+
+.btn-select {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.image-preview {
+    display: block;
+    width: 82.1053px;
+    height: 53.6565px;
+    min-width: 0px !important;
+    min-height: 0px !important;
+    max-width: none !important;
+    max-height: none !important;
+    transform: translateX(25.8621px) translateY(9.78478px);
+}
+
+
+#UserProfile:after {
+    background-color:#fff !important;
+}
+
+
+.badge-pill {
+    min-width: 55px;
+}
+
+.multiselect-container > li > a > label{
+    padding-left:15px !important;
+}
+
+.multiselect {
+    text-align: left;
+}
+
+.was-validated .form-control:invalid, .form-control.is-invalid {
+    border:1px solid #E5E5E5;
+    background-image: url("");
+}
+
+.was-validated .form-control:valid, .form-control.is-valid {
+    border: 1px solid #E5E5E5;
+    background-image: url("");
+}
+
+
+.custom-select {
+    background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 2 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px !important;
+}
+
+.dropdown-toggle:after, .dropleft .dropdown-toggle:before {
+    content:none !important;
+}
+
+.multiselect-container{
+    overflow-y:auto;
+    max-height:350px;
+}
+
+.mw-60px{
+    min-width:60px !important;
+}
+.mw-70px {
+    min-width: 70px !important;
+}
